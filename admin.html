@@ -128,23 +128,15 @@
 
         <div class="cloud-url-box">
             <div class="cloud-url-title">☁️ 配置文件访问地址</div>
-            <div class="cloud-url-content" id="cloudUrl">设置存储桶信息后显示</div>
-            <div class="guide-box-step"><span>💡</span> 在存储桶设置页面，找到「基础配置」→「自定义域名」，填入上面的地址</div>
+            <div class="cloud-url-content" id="cloudUrl">设置后显示配置地址</div>
+            <div class="guide-box-step"><span>💡</span> 将此地址填入云存储设置中即可自动同步</div>
         </div>
 
         <div class="config-section">
-            <div class="section-title">☁️ 云存储设置（可选）</div>
+            <div class="section-title">☁️ 云存储设置</div>
             <div class="form-group">
-                <label class="form-label">存储桶名称 (Bucket)</label>
-                <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos">
-            </div>
-            <div class="form-group">
-                <label class="form-label">地域 (Region)</label>
-                <input type="text" class="form-input" id="region" placeholder="例如：ap-shanghai" value="ap-shanghai">
-            </div>
-            <div class="form-group">
-                <label class="form-label">自定义域名（可选，用于访问配置文件）</label>
-                <input type="text" class="form-input" id="customDomain" placeholder="例如：config.yourdomain.com">
+                <label class="form-label">配置文件地址（完整URL）</label>
+                <input type="text" class="form-input" id="customUrl" placeholder="例如：https://xxx.github.io/仓库/wedding-config.json">
             </div>
         </div>
 
@@ -319,26 +311,12 @@
             const cloud = localStorage.getItem('cloudSettings');
             if (cloud) {
                 const c = JSON.parse(cloud);
-                document.getElementById('bucket').value = c.bucket || '';
-                document.getElementById('region').value = c.region || 'ap-shanghai';
-                document.getElementById('customDomain').value = c.customDomain || '';
-                updateCloudUrl(c);
+                document.getElementById('customUrl').value = c.customUrl || '';
+                document.getElementById('cloudUrl').textContent = c.customUrl || '请设置配置文件地址';
             }
 
             applyToForm();
             updatePreview();
-        }
-
-        function updateCloudUrl(c) {
-            if (c.bucket) {
-                let url;
-                if (c.customDomain) {
-                    url = 'https://' + c.customDomain + '/wedding-config.json';
-                } else {
-                    url = 'https://' + c.bucket + '.cos.' + (c.region || 'ap-shanghai') + '.myqcloud.com/wedding-config.json';
-                }
-                document.getElementById('cloudUrl').textContent = url;
-            }
         }
 
         function applyToForm() {
@@ -383,12 +361,10 @@
 
             // 保存云设置
             const cloud = {
-                bucket: document.getElementById('bucket').value.trim(),
-                region: document.getElementById('region').value.trim() || 'ap-shanghai',
-                customDomain: document.getElementById('customDomain').value.trim()
+                customUrl: document.getElementById('customUrl').value.trim()
             };
             localStorage.setItem('cloudSettings', JSON.stringify(cloud));
-            updateCloudUrl(cloud);
+            document.getElementById('cloudUrl').textContent = cloud.customUrl || '请设置配置文件地址';
 
             currentConfig = {
                 ...currentConfig,

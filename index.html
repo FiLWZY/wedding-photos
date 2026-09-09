@@ -119,16 +119,9 @@
             if (cloud) {
                 try {
                     const c = JSON.parse(cloud);
-                    if (c.bucket) {
-                        let url;
-                        if (c.customDomain) {
-                            url = 'https://' + c.customDomain + '/wedding-config.json';
-                        } else {
-                            url = 'https://' + c.bucket + '.cos.' + (c.region || 'ap-shanghai') + '.myqcloud.com/wedding-config.json';
-                        }
-                        
+                    if (c.customUrl) {
                         try {
-                            const res = await fetch(url + '?t=' + Date.now());
+                            const res = await fetch(c.customUrl + '?t=' + Date.now());
                             if (res.ok) {
                                 const data = await res.json();
                                 currentConfig = { ...defaultConfig, ...data };
