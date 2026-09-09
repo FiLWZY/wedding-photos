@@ -16,12 +16,123 @@
             background: linear-gradient(135deg, #fdf6f0 0%, #fff5f5 50%, #fdf2f8 100%);
             min-height: 100vh;
             padding: 20px;
-            padding-bottom: 80px;
         }
 
+        /* 登录页面 */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        .login-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            color: #c48484;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: #b8a0a0;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #f0e8e8;
+            border-radius: 12px;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #e8a4a4;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #c8b0b0;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e8a4a4, #d49191);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 164, 164, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 164, 164, 0.5);
+        }
+
+        .login-btn:disabled {
+            background: #d0c0c0;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .error-msg {
+            color: #e57373;
+            font-size: 13px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        .login-hint {
+            color: #c8b0b0;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        /* 设置页面 */
         .container {
             max-width: 600px;
             margin: 0 auto;
+            display: none;
+        }
+
+        .container.show {
+            display: block;
         }
 
         .header {
@@ -72,6 +183,26 @@
         }
 
         .back-btn:hover {
+            background: #fff5f5;
+            border-color: #e8a4a4;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #c48484;
+            border: 1px solid #f0d4d4;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .logout-btn:hover {
             background: #fff5f5;
             border-color: #e8a4a4;
         }
@@ -395,7 +526,33 @@
             margin-top: 6px;
         }
 
+        .set-password-section {
+            background: #fff8e6;
+            border: 1px solid #ffe4a0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .set-password-title {
+            color: #996600;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         @media (max-width: 480px) {
+            .login-container {
+                margin: 60px 20px;
+            }
+
+            .login-box {
+                padding: 30px 20px;
+            }
+
             .header h1 {
                 font-size: 22px;
             }
@@ -407,11 +564,39 @@
             .btn-group {
                 flex-direction: column;
             }
+
+            .logout-btn {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- 登录页面 -->
+    <div class="login-container" id="loginPage">
+        <div class="login-icon">💒</div>
+        <h1 class="login-title">管理后台</h1>
+        <p class="login-subtitle">请输入管理员密码</p>
+
+        <div class="login-box">
+            <div class="password-input-wrapper">
+                <input type="password" class="password-input" id="passwordInput" placeholder="请输入密码" maxlength="20">
+                <button class="password-toggle" onclick="togglePassword()">👁️</button>
+            </div>
+            <button class="login-btn" id="loginBtn" onclick="doLogin()">进入后台</button>
+            <p class="error-msg" id="errorMsg">密码错误，请重试</p>
+        </div>
+
+        <p class="login-hint" id="loginHint">首次使用请先设置密码</p>
+    </div>
+
+    <!-- 设置页面 -->
+    <button class="logout-btn" id="logoutBtn" onclick="logout()">退出登录</button>
+
+    <div class="container" id="configPage">
         <div class="header">
             <h1>管理后台</h1>
             <p>个性化设置 · 实时同步生效</p>
@@ -433,6 +618,17 @@
                 <button class="copy-btn" onclick="copyLink()">复制链接</button>
             </div>
             <div class="link-box-hint">将此链接做成二维码，放在婚礼现场让宾客扫码上传照片</div>
+        </div>
+
+        <!-- 设置密码 -->
+        <div class="set-password-section">
+            <div class="set-password-title">🔐 修改管理密码</div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="newPassword" placeholder="输入新密码（不修改请留空）" maxlength="20">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="confirmPassword" placeholder="确认新密码" maxlength="20">
+            </div>
         </div>
 
         <!-- 文字设置 -->
@@ -558,6 +754,97 @@
 
         let currentConfig = { ...defaultConfig };
 
+        // 检查是否已登录
+        function checkLogin() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            if (isLoggedIn === 'true') {
+                showConfigPage();
+            } else {
+                showLoginPage();
+            }
+        }
+
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('configPage').classList.remove('show');
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMsg').classList.remove('show');
+
+            // 检查是否设置过密码
+            const adminPassword = localStorage.getItem('adminPassword');
+            const loginHint = document.getElementById('loginHint');
+            if (adminPassword) {
+                loginHint.textContent = '请输入管理员密码';
+            } else {
+                loginHint.textContent = '首次使用请先设置密码';
+            }
+        }
+
+        function showConfigPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('configPage').classList.add('show');
+            document.getElementById('logoutBtn').style.display = 'block';
+            loadConfig();
+        }
+
+        // 切换密码显示
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const btn = document.querySelector('.password-toggle');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        // 执行登录
+        function doLogin() {
+            const password = document.getElementById('passwordInput').value;
+            const adminPassword = localStorage.getItem('adminPassword');
+
+            // 如果没有设置过密码，则设置密码
+            if (!adminPassword) {
+                if (password.length < 4) {
+                    document.getElementById('errorMsg').textContent = '密码至少4位';
+                    document.getElementById('errorMsg').classList.add('show');
+                    return;
+                }
+                localStorage.setItem('adminPassword', password);
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showToast('✅ 密码已设置，请记住！');
+                showConfigPage();
+                return;
+            }
+
+            // 验证密码
+            if (password === adminPassword) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                document.getElementById('errorMsg').classList.remove('show');
+                showConfigPage();
+            } else {
+                document.getElementById('errorMsg').textContent = '密码错误，请重试';
+                document.getElementById('errorMsg').classList.add('show');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            showLoginPage();
+        }
+
+        // 回车登录
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                doLogin();
+            }
+        });
+
         // 加载配置
         function loadConfig() {
             const saved = localStorage.getItem('weddingPhotoConfig');
@@ -592,21 +879,18 @@
             updatePresetActive();
         }
 
-        // 更新预设颜色
         function updatePresetActive() {
             document.querySelectorAll('.preset-color').forEach(el => {
                 el.classList.toggle('active', el.dataset.color === currentConfig.themeColor);
             });
         }
 
-        // 更新预览
         function updatePreview() {
             document.getElementById('previewTitle').textContent = currentConfig.pageTitle || '婚礼照片收集';
             document.getElementById('previewTitle').style.color = currentConfig.themeColor;
             document.getElementById('previewSubtitle').textContent = currentConfig.pageSubtitle || '记录美好瞬间 · 分享幸福时刻';
         }
 
-        // 更新分享链接
         function updateShareUrl() {
             const url = window.location.href.replace('admin.html', 'index.html');
             document.getElementById('shareUrl').textContent = url;
@@ -614,6 +898,24 @@
 
         // 保存配置
         function saveConfig() {
+            // 检查是否修改密码
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword) {
+                if (newPassword.length < 4) {
+                    showToast('密码至少4位');
+                    return;
+                }
+                if (newPassword !== confirmPassword) {
+                    showToast('两次密码不一致');
+                    return;
+                }
+                localStorage.setItem('adminPassword', newPassword);
+                showToast('✅ 密码已修改，请记住新密码！');
+            }
+
+            // 保存其他配置
             currentConfig = {
                 pageTitle: document.getElementById('pageTitle').value || defaultConfig.pageTitle,
                 pageSubtitle: document.getElementById('pageSubtitle').value || defaultConfig.pageSubtitle,
@@ -629,10 +931,14 @@
 
             localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
             updatePreview();
+
+            // 清空密码输入框
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+
             showToast('✅ 配置已保存，首页实时更新！');
         }
 
-        // 重置配置
         function resetConfig() {
             if (confirm('确定要恢复默认设置吗？')) {
                 localStorage.removeItem('weddingPhotoConfig');
@@ -643,7 +949,6 @@
             }
         }
 
-        // 显示提示
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -651,7 +956,6 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // 复制链接
         function copyLink() {
             const url = window.location.href.replace('admin.html', 'index.html');
             navigator.clipboard.writeText(url).then(() => {
@@ -680,7 +984,6 @@
             }
         });
 
-        // 预设颜色
         document.getElementById('presetColors').addEventListener('click', (e) => {
             const preset = e.target.closest('.preset-color');
             if (preset) {
@@ -690,20 +993,15 @@
             }
         });
 
-        // 云存储开关
         document.getElementById('useCloud').addEventListener('change', (e) => {
             document.getElementById('cloudSettings').style.display = e.target.checked ? 'block' : 'none';
         });
 
-        // 实时预览
         document.getElementById('pageTitle').addEventListener('input', updatePreview);
         document.getElementById('pageSubtitle').addEventListener('input', updatePreview);
 
         // 初始化
-        loadConfig();
-
-        // 多标签页同步
-        window.addEventListener('storage', loadConfig);
+        checkLogin();
     </script>
 </body>
 </html>
