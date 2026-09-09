@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配置教程 - 婚礼照片收集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #fafafa;
+            padding: 20px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #c48484;
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0e8e8;
+        }
+
+        h2 {
+            color: #8a7a7a;
+            font-size: 18px;
+            margin: 30px 0 15px;
+            padding-left: 10px;
+            border-left: 4px solid #e8a4a4;
+        }
+
+        .step {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #e8a4a4, #d49191);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #5a4a4a;
+            display: inline;
+        }
+
+        .step-content {
+            margin-top: 15px;
+            padding-left: 38px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #c48484;
+        }
+
+        pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border-left: 3px solid #e8a4a4;
+        }
+
+        .notice {
+            background: #fff8e6;
+            border: 1px solid #ffe4a0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #996600;
+        }
+
+        .notice strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #c48484;
+            border: 1px solid #f0d4d4;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #fff5f5;
+            border-color: #e8a4a4;
+        }
+
+        .image-placeholder {
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: #999;
+            margin: 10px 0;
+        }
+
+        .highlight {
+            color: #c48484;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回首页</a>
+        
+        <h1>☁️ 腾讯云COS 配置教程</h1>
+
+        <div class="notice">
+            <strong>💡 前置要求</strong>
+            需要一个腾讯云账号，实名认证后即可免费使用。
+        </div>
+
+        <h2>第一步：开通 COS 服务</h2>
+        <div class="step">
+            <span class="step-number">1</span>
+            <span class="step-title">登录腾讯云</span>
+            <div class="step-content">
+                访问 <a href="https://cloud.tencent.com" target="_blank" style="color:#c48484">cloud.tencent.com</a>，使用微信或QQ登录，并进行实名认证。
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <span class="step-title">进入对象存储控制台</span>
+            <div class="step-content">
+                登录后在控制台搜索 <code>对象存储</code> 或访问：<br>
+                <a href="https://console.cloud.tencent.com/cos5" target="_blank" style="color:#c48484">
+                    https://console.cloud.tencent.com/cos5
+                </a>
+            </div>
+        </div>
+
+        <h2>第二步：创建存储桶</h2>
+        <div class="step">
+            <span class="step-number">3</span>
+            <span class="step-title">点击「创建存储桶」</span>
+            <div class="step-content">
+                点击「Bucket列表」，然后点击「创建存储桶」按钮。
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <span class="step-title">填写存储桶信息</span>
+            <div class="step-content">
+                <pre>
+名称：wedding-photos-你的名字（如 wedding-photos-lisi）
+地域：选择离你最近的地区（如 ap-shanghai 上海）
+访问权限：<span class="highlight">选择「公有读私有写」</span>
+                </pre>
+            </div>
+        </div>
+
+        <h2>第三步：获取配置信息</h2>
+        <div class="step">
+            <span class="step-number">5</span>
+            <span class="step-title">记录存储桶名称</span>
+            <div class="step-content">
+                在存储桶列表中复制你的存储桶名称，格式如：<br>
+                <code>wedding-photos-lisi-1234567890</code>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">6</span>
+            <span class="step-title">获取地域名称</span>
+            <div class="step-content">
+                在存储桶「基本信息」中找到「所属地域」，记住对应的英文缩写：<br>
+                <pre>
+上海 = ap-shanghai
+北京 = ap-beijing
+广州 = ap-guangzhou
+成都 = ap-chengdu
+                </pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">7</span>
+            <span class="step-title">获取 SecretId 和 SecretKey</span>
+            <div class="step-content">
+                访问：<a href="https://console.cloud.tencent.com/cam/capi" target="_blank" style="color:#c48484">
+                    访问密钥管理
+                </a><br>
+                创建一个密钥或使用已有的密钥，复制 <code>SecretId</code> 和 <code>SecretKey</code>。
+                
+                <div class="notice">
+                    <strong>⚠️ 重要提示</strong>
+                    SecretKey 相当于密码，请勿泄露给他人！
+                </div>
+            </div>
+        </div>
+
+        <h2>第四步：配置页面</h2>
+        <div class="step">
+            <span class="step-number">8</span>
+            <span class="step-title">填写配置信息</span>
+            <div class="step-content">
+                回到照片收集页面，点击 ⚙️ 设置按钮，填写：
+                <pre>
+环境 ID：留空（或填存储桶名称）
+云存储 Bucket：你的存储桶名称
+云存储 Region：你选择的地域代码
+使用云开发：<span class="highlight">☑️ 勾选</span>
+                </pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">9</span>
+            <span class="step-title">点击测试连接</span>
+            <div class="step-content">
+                点击「测试连接」按钮，确保配置正确后保存设置。
+            </div>
+        </div>
+
+        <h2>第五步：部署上线</h2>
+        <div class="step">
+            <span class="step-number">10</span>
+            <span class="step-title">部署到 GitHub Pages</span>
+            <div class="step-content">
+                1. 创建 GitHub 仓库<br>
+                2. 上传 <code>index.html</code> 文件<br>
+                3. 启用 GitHub Pages<br>
+                4. 获取访问链接分享给宾客
+            </div>
+        </div>
+
+        <div class="notice">
+            <strong>💡 费用说明</strong>
+            腾讯云COS有免费额度：50GB存储空间、10GB/月流量。普通婚礼使用完全足够，超出部分费用很低。
+        </div>
+
+        <h2>常见问题</h2>
+        <div class="step">
+            <div class="step-title">Q: 上传的照片在哪里查看？</div>
+            <div class="step-content">
+                A: 在腾讯云 COS 控制台的存储桶中，可以查看所有上传的照片。
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">Q: 宾客能看到其他人的照片吗？</div>
+            <div class="step-content">
+                A: 可以看到所有人都上传的照片，形成互动氛围。
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">Q: 需要给每个宾客配置账号吗？</div>
+            <div class="step-content">
+                A: 不需要，宾客直接打开链接即可上传，无需登录。
+            </div>
+        </div>
+
+        <div style="text-align:center; padding:30px 0; color:#b8a0a0; font-size:13px;">
+            婚礼照片收集 · 让每一位宾客都成为美好瞬间的记录者
+        </div>
+    </div>
+</body>
+</html>
