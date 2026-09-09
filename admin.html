@@ -7,12 +7,33 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#fdf6f0 0%,#fff5f5 50%,#fdf2f8 100%);min-height:100vh;padding:20px}
-        .container{max-width:600px;margin:0 auto}
+        
+        /* 登录页 */
+        .login-container{max-width:400px;margin:80px auto;text-align:center}
+        .login-icon{font-size:60px;margin-bottom:20px}
+        .login-title{color:#c48484;font-size:24px;margin-bottom:10px}
+        .login-subtitle{color:#b8a0a0;font-size:14px;margin-bottom:30px}
+        .login-box{background:#fff;border-radius:20px;padding:40px 30px;box-shadow:0 10px 40px rgba(0,0,0,.1)}
+        .login-box input{width:100%;padding:15px;border:2px solid #f0e8e8;border-radius:12px;font-size:16px;text-align:center;letter-spacing:4px;margin-bottom:15px;transition:all .3s}
+        .login-box input:focus{outline:none;border-color:#e8a4a4}
+        .login-btn{width:100%;padding:15px;background:linear-gradient(135deg,#e8a4a4,#d49191);color:#fff;border:none;border-radius:12px;font-size:16px;cursor:pointer;transition:all .3s}
+        .login-btn:hover{transform:translateY(-2px)}
+        .login-btn:disabled{background:#d0c0c0;cursor:not-allowed}
+        .login-error{color:#e57373;font-size:13px;margin-top:10px;display:none}
+        .login-error.show{display:block}
+        .login-hint{color:#c8b0b0;font-size:12px;margin-top:15px}
+        
+        /* 设置页 */
+        .container{max-width:600px;margin:0 auto;display:none}
+        .container.show{display:block}
         .header{text-align:center;padding:30px 20px;position:relative}
         .header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:3px;background:linear-gradient(90deg,#e8a4a4,#f5c6c6);border-radius:2px}
         .header h1{color:#c48484;font-size:26px;font-weight:500;margin-bottom:8px;letter-spacing:3px}
         .header p{color:#b8a0a0;font-size:13px}
-        .back-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#c48484;border:1px solid #f0d4d4;padding:10px 20px;border-radius:25px;font-size:14px;text-decoration:none;margin-bottom:20px;transition:all .3s}
+        .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .top-btn{background:#fff;color:#c48484;border:1px solid #f0d4d4;padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .3s}
+        .top-btn:hover{background:#fff5f5}
+        .back-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#c48484;border:1px solid #f0d4d4;padding:10px 20px;border-radius:25px;font-size:14px;text-decoration:none;transition:all .3s}
         .back-btn:hover{background:#fff5f5}
         .config-section{background:#fff;border-radius:20px;padding:20px;margin-bottom:15px;box-shadow:0 4px 15px rgba(0,0,0,.05)}
         .section-title{color:#c48484;font-size:16px;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #f0e8e8;display:flex;align-items:center;gap:8px}
@@ -46,9 +67,6 @@
         .preview-box{background:#fdfbfb;border-radius:15px;padding:25px;text-align:center;border:2px dashed #f0d4d4}
         .preview-title{font-size:22px;margin-bottom:8px;color:#333}
         .preview-subtitle{font-size:13px;color:#888}
-        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,.8);color:#fff;padding:12px 24px;border-radius:25px;font-size:14px;opacity:0;transition:all .3s;z-index:1000}
-        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-        .status-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:12px 15px;margin-bottom:15px;font-size:13px;color:#2e7d32;display:flex;align-items:center;gap:10px}
         .link-box{background:#f5f5f5;border-radius:10px;padding:12px;margin-bottom:15px}
         .link-box-label{font-size:12px;color:#888;margin-bottom:6px}
         .link-box-content{display:flex;align-items:center;gap:10px}
@@ -60,37 +78,63 @@
         .cloud-guide-title{color:#996600;font-size:14px;font-weight:500;margin-bottom:10px}
         .cloud-guide-step{color:#666;font-size:12px;margin-bottom:8px;display:flex;gap:8px}
         .cloud-guide-step span:first-child{color:#ff9800;font-weight:bold}
+        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,.8);color:#fff;padding:12px 24px;border-radius:25px;font-size:14px;opacity:0;transition:all .3s;z-index:1000}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
         @media(max-width:480px){.header h1{font-size:22px}.btn-group{flex-direction:column}}
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- 登录页 -->
+    <div class="login-container" id="loginPage">
+        <div class="login-icon">💒</div>
+        <h1 class="login-title">管理后台</h1>
+        <p class="login-subtitle" id="loginSubtitle">请设置管理员密码</p>
+        
+        <div class="login-box">
+            <input type="password" id="passwordInput" placeholder="输入密码（至少4位）" maxlength="20">
+            <button class="login-btn" id="loginBtn" onclick="doLogin()">确认</button>
+            <p class="login-error" id="loginError">密码错误</p>
+        </div>
+        
+        <p class="login-hint">密码保存在本地，可多设备使用相同密码</p>
+    </div>
+
+    <!-- 设置页 -->
+    <div class="container" id="configPage">
+        <div class="top-bar">
+            <button class="top-btn" onclick="logout()">退出登录</button>
+            <a href="index.html" class="back-btn">← 返回首页</a>
+        </div>
+
         <div class="header">
             <h1>管理后台</h1>
             <p>个性化设置 · 一键同步</p>
-        </div>
-
-        <a href="index.html" class="back-btn">← 返回首页</a>
-
-        <div class="status-bar" id="statusBar">
-            <span>✅ 配置文件就绪</span>
         </div>
 
         <div class="link-box">
             <div class="link-box-label">📤 宾客访问链接</div>
             <div class="link-box-content">
                 <span class="link-box-url" id="shareUrl">index.html</span>
-                <button class="copy-btn" onclick="copyLink()">复制链接</button>
+                <button class="copy-btn" onclick="copyLink()">复制</button>
             </div>
-            <div class="link-box-hint">将此链接做成二维码，放在婚礼现场让宾客扫码上传照片</div>
+            <div class="link-box-hint">将此链接做成二维码，放在婚礼现场</div>
         </div>
 
         <div class="cloud-guide">
             <div class="cloud-guide-title">☁️ 同步到云端（可选）</div>
-            <div class="cloud-guide-step"><span>1.</span> 点击「下载配置文件」</div>
-            <div class="cloud-guide-step"><span>2.</span> 登录腾讯云COS控制台</div>
-            <div class="cloud-guide-step"><span>3.</span> 上传这个配置文件到存储桶根目录</div>
-            <div class="cloud-guide-step"><span>4.</span> 文件名改为：wedding-config.json</div>
+            <div class="cloud-guide-step"><span>1.</span> 修改配置后点击「下载配置」</div>
+            <div class="cloud-guide-step"><span>2.</span> 上传到腾讯云COS存储桶根目录</div>
+            <div class="cloud-guide-step"><span>3.</span> 文件名改为：wedding-config.json</div>
+        </div>
+
+        <div class="config-section">
+            <div class="section-title">🔐 修改密码</div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="newPassword" placeholder="输入新密码（不修改请留空）" maxlength="20">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="confirmPassword" placeholder="确认新密码" maxlength="20">
+            </div>
         </div>
 
         <div class="config-section">
@@ -169,11 +213,81 @@
             uploadText: '点击或拖拽上传照片',
             statLabel: '已收集照片',
             themeColor: '#c48484',
-            showDecorations: true,
-            saveTime: Date.now()
+            showDecorations: true
         };
 
         let currentConfig = { ...defaultConfig };
+        let adminPassword = localStorage.getItem('adminPassword');
+
+        // 检查登录状态
+        function checkLogin() {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                showConfigPage();
+            } else {
+                showLoginPage();
+            }
+        }
+
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('configPage').classList.remove('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.remove('show');
+
+            const hint = document.getElementById('loginSubtitle');
+            const btn = document.getElementById('loginBtn');
+            if (adminPassword) {
+                hint.textContent = '请输入管理员密码';
+                btn.textContent = '登录';
+            } else {
+                hint.textContent = '请设置管理员密码';
+                btn.textContent = '确认';
+            }
+        }
+
+        function showConfigPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('configPage').classList.add('show');
+            loadConfig();
+        }
+
+        function doLogin() {
+            const password = document.getElementById('passwordInput').value;
+
+            if (!adminPassword) {
+                // 首次设置密码
+                if (password.length < 4) {
+                    document.getElementById('loginError').textContent = '密码至少4位';
+                    document.getElementById('loginError').classList.add('show');
+                    return;
+                }
+                adminPassword = password;
+                localStorage.setItem('adminPassword', password);
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showToast('密码已设置');
+                showConfigPage();
+            } else {
+                // 验证密码
+                if (password === adminPassword) {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    showConfigPage();
+                } else {
+                    document.getElementById('loginError').textContent = '密码错误';
+                    document.getElementById('loginError').classList.add('show');
+                    document.getElementById('passwordInput').value = '';
+                }
+            }
+        }
+
+        // 回车登录
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doLogin();
+        });
+
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            showLoginPage();
+        }
 
         function loadConfig() {
             const saved = localStorage.getItem('weddingPhotoConfig');
@@ -215,19 +329,40 @@
         }
 
         function saveConfig() {
+            // 修改密码
+            const newPwd = document.getElementById('newPassword').value;
+            const confirmPwd = document.getElementById('confirmPassword').value;
+
+            if (newPwd) {
+                if (newPwd.length < 4) {
+                    showToast('密码至少4位');
+                    return;
+                }
+                if (newPwd !== confirmPwd) {
+                    showToast('两次密码不一致');
+                    return;
+                }
+                adminPassword = newPwd;
+                localStorage.setItem('adminPassword', newPwd);
+                showToast('密码已修改');
+            }
+
             currentConfig = {
                 pageTitle: document.getElementById('pageTitle').value || defaultConfig.pageTitle,
                 pageSubtitle: document.getElementById('pageSubtitle').value || defaultConfig.pageSubtitle,
                 uploadText: document.getElementById('uploadText').value || defaultConfig.uploadText,
                 statLabel: document.getElementById('statLabel').value || defaultConfig.statLabel,
                 themeColor: document.getElementById('themeColorValue').value,
-                showDecorations: document.getElementById('showDecorations').checked,
-                saveTime: Date.now()
+                showDecorations: document.getElementById('showDecorations').checked
             };
 
             localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
             updatePreview();
-            showToast('✅ 配置已保存到本地');
+
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+
+            showToast('配置已保存');
         }
 
         function downloadConfig() {
@@ -239,7 +374,7 @@
             a.download = 'wedding-config.json';
             a.click();
             URL.revokeObjectURL(url);
-            showToast('📥 配置文件已下载');
+            showToast('配置文件已下载');
         }
 
         function resetConfig() {
@@ -248,7 +383,7 @@
                 currentConfig = { ...defaultConfig };
                 applyToForm();
                 updatePreview();
-                showToast('已恢复默认设置');
+                showToast('已恢复默认');
             }
         }
 
@@ -265,6 +400,7 @@
             showToast('链接已复制');
         }
 
+        // 颜色
         document.getElementById('themeColorPicker').addEventListener('input', (e) => {
             document.getElementById('themeColorValue').value = e.target.value;
             updatePresetActive();
@@ -289,7 +425,7 @@
         document.getElementById('pageTitle').addEventListener('input', updatePreview);
         document.getElementById('pageSubtitle').addEventListener('input', updatePreview);
 
-        loadConfig();
+        checkLogin();
     </script>
 </body>
 </html>
