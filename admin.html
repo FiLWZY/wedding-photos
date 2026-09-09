@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>婚礼照片收集 - 管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #fdf6f0 0%, #fff5f5 50%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #e8a4a4, #f5c6c6);
+            border-radius: 2px;
+        }
+
+        .header h1 {
+            color: #c48484;
+            font-size: 26px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: 3px;
+        }
+
+        .header p {
+            color: #b8a0a0;
+            font-size: 13px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #c48484;
+            border: 1px solid #f0d4d4;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #fff5f5;
+            border-color: #e8a4a4;
+        }
+
+        .config-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            color: #c48484;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0e8e8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            color: #8a7a7a;
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #f0e8e8;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #5a4a4a;
+            transition: all 0.3s ease;
+            background: #fdfbfb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #e8a4a4;
+            background: white;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-picker {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .color-picker::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker::-webkit-color-swatch {
+            border: 2px solid #f0e8e8;
+            border-radius: 8px;
+        }
+
+        .color-value {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #f0e8e8;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #5a4a4a;
+            background: #fdfbfb;
+            font-family: monospace;
+        }
+
+        .preset-colors {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preset-color {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preset-color:hover {
+            transform: scale(1.1);
+            border-color: #5a4a4a;
+        }
+
+        .preset-color.active {
+            border-color: #5a4a4a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 28px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e0d0d0;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider::before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #e8a4a4, #d49191);
+        }
+
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e8a4a4, #d49191);
+            color: white;
+            box-shadow: 0 4px 15px rgba(232, 164, 164, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 164, 164, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #c48484;
+            border: 2px solid #f0d4d4;
+        }
+
+        .btn-secondary:hover {
+            background: #fff5f5;
+            border-color: #e8a4a4;
+        }
+
+        .preview-box {
+            background: #fdfbfb;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px dashed #f0d4d4;
+        }
+
+        .preview-title {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .preview-subtitle {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .status-bar {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .link-box {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .link-box-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+
+        .link-box-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .link-box-url {
+            flex: 1;
+            font-size: 14px;
+            color: #c48484;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .link-box-hint {
+            font-size: 11px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .config-section {
+                padding: 15px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>管理后台</h1>
+            <p>个性化设置 · 实时同步生效</p>
+        </div>
+
+        <a href="index.html" class="back-btn">← 返回首页</a>
+
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <span class="status-dot"></span>
+            <span>配置已保存，首页实时更新</span>
+        </div>
+
+        <!-- 链接分享 -->
+        <div class="link-box">
+            <div class="link-box-label">📤 宾客访问链接</div>
+            <div class="link-box-content">
+                <span class="link-box-url" id="shareUrl">index.html</span>
+                <button class="copy-btn" onclick="copyLink()">复制链接</button>
+            </div>
+            <div class="link-box-hint">将此链接做成二维码，放在婚礼现场让宾客扫码上传照片</div>
+        </div>
+
+        <!-- 文字设置 -->
+        <div class="config-section">
+            <div class="section-title">📝 文字设置</div>
+
+            <div class="form-group">
+                <label class="form-label">页面标题</label>
+                <input type="text" class="form-input" id="pageTitle" placeholder="输入页面标题" maxlength="30">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">副标题描述</label>
+                <input type="text" class="form-input" id="pageSubtitle" placeholder="输入副标题" maxlength="50">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">上传提示文字</label>
+                <input type="text" class="form-input" id="uploadText" placeholder="点击或拖拽上传照片" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">照片统计标签</label>
+                <input type="text" class="form-input" id="statLabel" placeholder="已收集照片" maxlength="10">
+            </div>
+        </div>
+
+        <!-- 颜色设置 -->
+        <div class="config-section">
+            <div class="section-title">🎨 颜色设置</div>
+
+            <div class="form-group">
+                <label class="form-label">主题色</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" class="color-picker" id="themeColorPicker" value="#c48484">
+                    <input type="text" class="color-value" id="themeColorValue" value="#c48484" maxlength="7">
+                </div>
+                <div class="preset-colors" id="presetColors">
+                    <div class="preset-color active" style="background: #c48484" data-color="#c48484" title="玫瑰粉"></div>
+                    <div class="preset-color" style="background: #8b7355" data-color="#8b7355" title="焦糖棕"></div>
+                    <div class="preset-color" style="background: #7a9e7e" data-color="#7a9e7e" title="薄荷绿"></div>
+                    <div class="preset-color" style="background: #6b8cae" data-color="#6b8cae" title="雾霾蓝"></div>
+                    <div class="preset-color" style="background: #9b7bb8" data-color="#9b7bb8" title="薰衣草"></div>
+                    <div class="preset-color" style="background: #c9a86c" data-color="#c9a86c" title="香槟金"></div>
+                    <div class="preset-color" style="background: #d4726a" data-color="#d4726a" title="珊瑚红"></div>
+                    <div class="preset-color" style="background: #4a4a4a" data-color="#4a4a4a" title="石墨灰"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 云存储设置 -->
+        <div class="config-section">
+            <div class="section-title">☁️ 云存储设置</div>
+
+            <div class="form-group toggle-group">
+                <label class="form-label">启用云端存储</label>
+                <label class="toggle">
+                    <input type="checkbox" id="useCloud">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div id="cloudSettings" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">存储桶名称 (Bucket)</label>
+                    <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos-123456">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">地域 (Region)</label>
+                    <input type="text" class="form-input" id="region" placeholder="例如：ap-shanghai" value="ap-shanghai">
+                </div>
+
+                <a href="setup-guide.html" class="back-btn" style="margin-top:10px; margin-bottom:0;">
+                    📖 查看配置教程
+                </a>
+            </div>
+        </div>
+
+        <!-- 其他设置 -->
+        <div class="config-section">
+            <div class="section-title">✨ 其他设置</div>
+
+            <div class="form-group toggle-group">
+                <label class="form-label">显示浮动装饰</label>
+                <label class="toggle">
+                    <input type="checkbox" id="showDecorations" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 预览 -->
+        <div class="config-section">
+            <div class="section-title">👁️ 效果预览</div>
+            <div class="preview-box" id="previewBox">
+                <div class="preview-title" id="previewTitle">婚礼照片收集</div>
+                <div class="preview-subtitle" id="previewSubtitle">记录美好瞬间 · 分享幸福时刻</div>
+            </div>
+        </div>
+
+        <!-- 保存按钮 -->
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="resetConfig()">恢复默认</button>
+            <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const defaultConfig = {
+            pageTitle: '婚礼照片收集',
+            pageSubtitle: '记录美好瞬间 · 分享幸福时刻',
+            uploadText: '点击或拖拽上传照片',
+            statLabel: '已收集照片',
+            themeColor: '#c48484',
+            useCloud: false,
+            bucket: '',
+            region: 'ap-shanghai',
+            showDecorations: true
+        };
+
+        let currentConfig = { ...defaultConfig };
+
+        // 加载配置
+        function loadConfig() {
+            const saved = localStorage.getItem('weddingPhotoConfig');
+            if (saved) {
+                try {
+                    currentConfig = { ...defaultConfig, ...JSON.parse(saved) };
+                } catch (e) {
+                    currentConfig = { ...defaultConfig };
+                }
+            }
+            applyToForm();
+            updatePreview();
+            updateShareUrl();
+        }
+
+        // 应用配置到表单
+        function applyToForm() {
+            document.getElementById('pageTitle').value = currentConfig.pageTitle;
+            document.getElementById('pageSubtitle').value = currentConfig.pageSubtitle;
+            document.getElementById('uploadText').value = currentConfig.uploadText;
+            document.getElementById('statLabel').value = currentConfig.statLabel;
+
+            document.getElementById('themeColorPicker').value = currentConfig.themeColor;
+            document.getElementById('themeColorValue').value = currentConfig.themeColor;
+
+            document.getElementById('useCloud').checked = currentConfig.useCloud;
+            document.getElementById('bucket').value = currentConfig.bucket || '';
+            document.getElementById('region').value = currentConfig.region || 'ap-shanghai';
+            document.getElementById('showDecorations').checked = currentConfig.showDecorations;
+
+            document.getElementById('cloudSettings').style.display = currentConfig.useCloud ? 'block' : 'none';
+            updatePresetActive();
+        }
+
+        // 更新预设颜色
+        function updatePresetActive() {
+            document.querySelectorAll('.preset-color').forEach(el => {
+                el.classList.toggle('active', el.dataset.color === currentConfig.themeColor);
+            });
+        }
+
+        // 更新预览
+        function updatePreview() {
+            document.getElementById('previewTitle').textContent = currentConfig.pageTitle || '婚礼照片收集';
+            document.getElementById('previewTitle').style.color = currentConfig.themeColor;
+            document.getElementById('previewSubtitle').textContent = currentConfig.pageSubtitle || '记录美好瞬间 · 分享幸福时刻';
+        }
+
+        // 更新分享链接
+        function updateShareUrl() {
+            const url = window.location.href.replace('admin.html', 'index.html');
+            document.getElementById('shareUrl').textContent = url;
+        }
+
+        // 保存配置
+        function saveConfig() {
+            currentConfig = {
+                pageTitle: document.getElementById('pageTitle').value || defaultConfig.pageTitle,
+                pageSubtitle: document.getElementById('pageSubtitle').value || defaultConfig.pageSubtitle,
+                uploadText: document.getElementById('uploadText').value || defaultConfig.uploadText,
+                statLabel: document.getElementById('statLabel').value || defaultConfig.statLabel,
+                themeColor: document.getElementById('themeColorValue').value,
+                useCloud: document.getElementById('useCloud').checked,
+                bucket: document.getElementById('bucket').value.trim(),
+                region: document.getElementById('region').value.trim() || 'ap-shanghai',
+                showDecorations: document.getElementById('showDecorations').checked,
+                saveTime: Date.now()
+            };
+
+            localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
+            updatePreview();
+            showToast('✅ 配置已保存，首页实时更新！');
+        }
+
+        // 重置配置
+        function resetConfig() {
+            if (confirm('确定要恢复默认设置吗？')) {
+                localStorage.removeItem('weddingPhotoConfig');
+                currentConfig = { ...defaultConfig };
+                applyToForm();
+                updatePreview();
+                showToast('已恢复默认设置');
+            }
+        }
+
+        // 显示提示
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // 复制链接
+        function copyLink() {
+            const url = window.location.href.replace('admin.html', 'index.html');
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('链接已复制到剪贴板');
+            }).catch(() => {
+                const input = document.createElement('input');
+                input.value = url;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('链接已复制到剪贴板');
+            });
+        }
+
+        // 颜色同步
+        document.getElementById('themeColorPicker').addEventListener('input', (e) => {
+            document.getElementById('themeColorValue').value = e.target.value;
+            updatePresetActive();
+        });
+
+        document.getElementById('themeColorValue').addEventListener('input', (e) => {
+            if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+                document.getElementById('themeColorPicker').value = e.target.value;
+                updatePresetActive();
+            }
+        });
+
+        // 预设颜色
+        document.getElementById('presetColors').addEventListener('click', (e) => {
+            const preset = e.target.closest('.preset-color');
+            if (preset) {
+                document.getElementById('themeColorPicker').value = preset.dataset.color;
+                document.getElementById('themeColorValue').value = preset.dataset.color;
+                updatePresetActive();
+            }
+        });
+
+        // 云存储开关
+        document.getElementById('useCloud').addEventListener('change', (e) => {
+            document.getElementById('cloudSettings').style.display = e.target.checked ? 'block' : 'none';
+        });
+
+        // 实时预览
+        document.getElementById('pageTitle').addEventListener('input', updatePreview);
+        document.getElementById('pageSubtitle').addEventListener('input', updatePreview);
+
+        // 初始化
+        loadConfig();
+
+        // 多标签页同步
+        window.addEventListener('storage', loadConfig);
+    </script>
+</body>
+</html>
