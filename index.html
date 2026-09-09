@@ -84,7 +84,6 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        const CONFIG_KEY = 'wedding-config.json';
         const defaultConfig = {
             pageTitle: '婚礼照片收集',
             pageSubtitle: '记录美好瞬间 · 分享幸福时刻',
@@ -106,71 +105,6 @@
         const toast = document.getElementById('toast');
         const hearts = document.getElementById('hearts');
 
-        // SHA1
-        const CryptoJS_SHA1 = function(s) {
-            function rotl(n,s){return(n<<s)|(n>>>(32-s));}
-            function sha1hex(num) {
-                var hex="";
-                for(var j=0;j<num.length*32;j+=8)hex+=((num[j>>5]>>>(24-j%32))&1).toString(16);
-                return hex;
-            }
-            function sha1blk(s) {
-                var blks=[];
-                for(var i=0;i<s.length*8;i+=512){
-                    var blk=s.slice(i,i+512);
-                    var words=[];
-                    for(var j=0;j<16;j++)words[j]=blk.readInt32BE(j*4);
-                    words[15]=s.length*8;
-                    blks.push(words);
-                }
-                var h=0x67452301,ee=0xEFCDAB89,a8=0x98BADCFE,f3=0x10325476,c1=0xC3D2E1F0;
-                blks.forEach(function(blk){
-                    var w=[];
-                    for(var j=0;j<80;j++)w[j]=j<16?blk[j]:rotl(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
-                    var hh=h,ee2=ee,a3=a8,f=f3,c2=c1;
-                    for(var j=0;j<80;j++){
-                        var r=(j/20)|0;
-                        var t=rotl(hh,5)+((r==0?ee2:(r==1?a8:f))+c2+w[j]+(r==0?0x5A827999:(r==1?0x6ED9EBA1:(r==2?0x8F1BBCDC:0xCA62C1D6)))|0;
-                        c2=f;f=a8;a8=rotl(ee2,30);ee2=hh;hh=t;
-                    }
-                    h=h+hh|0;ee=ee+ee2|0;a8=a8+a3|0;f=f+c1|0;c1=c1+c2|0;
-                });
-                return [h,ee,a8,f,c1];
-            }
-            var ba=[];
-            for(var i=0;i<s.length;i++)ba.push(s.charCodeAt(i));
-            ba.push(0x80);
-            while(ba.length%64)ba.push(0);
-            return sha1hex(sha1blk(new Uint8Array(ba).buffer));
-        };
-
-        const CryptoJS_HmacSHA1 = function(s,k) {
-            var ba=s.split('').map(function(c){return c.charCodeAt(0);});
-            var M=64;
-            var K=[0x5a827999,0x6ed9eba1,0x8f1bbcdc,0xca62c1d6];
-            var H=[0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476,0xC3D2E1F0];
-            for(var i=0;i<ba.length/64;i++){
-                var w=[];
-                for(var j=0;j<16;j++)w[j]=ba.readInt32BE?ba.readInt32BE((i*64+j*4)):((ba[i*64+j*4]<<24)|(ba[i*64+j*4+1]<<16)|(ba[i*64+j*4+2]<<8)|ba[i*64+j*4+3]);
-                var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4];
-                for(var j=0;j<80;j++){
-                    var t=(a<<5)+(b^c^d)+e+w[j]+K[(j/20)|0]|0;
-                    e=d;d=c;c=(b<<30)|(b>>>2);b=a;a=t;
-                }
-                H[0]=H[0]+a|0;H[1]=H[1]+b|0;H[2]=H[2]+c|0;H[3]=H[3]+d|0;H[4]=H[4]+e|0;
-            }
-            return H.map(function(x){return x.toString(16).padStart(8,'0');}).join('');
-        };
-
-        function getSignature(secretKey) {
-            const now = Math.floor(Date.now() / 1000);
-            const exp = now + 3600;
-            const signTime = now + ';' + exp;
-            const httpString = 'cos.getCredential\n' + CONFIG_KEY + '\nhost=\n';
-            const stringToSign = 'sha1\n' + signTime + '\n' + CryptoJS_SHA1(httpString) + '\n';
-            return CryptoJS_HmacSHA1(stringToSign, secretKey);
-        }
-
         async function loadConfig() {
             // 先从本地加载
             const saved = localStorage.getItem('weddingPhotoConfig');
@@ -181,21 +115,25 @@
             }
 
             // 从云端加载
-            const cloud = localStorage.getItem('cloudConfig');
+            const cloud = localStorage.getItem('cloudSettings');
             if (cloud) {
                 try {
                     const c = JSON.parse(cloud);
-                    if (c.bucket && c.secretId && c.secretKey) {
-                        const signature = getSignature(c.secretKey);
-                        const now = Math.floor(Date.now() / 1000);
-                        const host = c.bucket + '.cos.' + (c.region || 'ap-shanghai') + '.myqcloud.com';
-                        const auth = 'q-sign-algorithm=sha1&q-ak=' + c.secretId + '&q-sign-time=' + now + ';' + (now+3600) + '&q-key-time=' + now + ';' + (now+3600) + '&q-header-list=host&q-url-param-list=&q-signature=' + signature;
-                        
-                        const res = await fetch('https://' + host + '/' + CONFIG_KEY + '?' + auth);
-                        if (res.ok) {
-                            const data = await res.json();
-                            currentConfig = { ...defaultConfig, ...data };
+                    if (c.bucket) {
+                        let url;
+                        if (c.customDomain) {
+                            url = 'https://' + c.customDomain + '/wedding-config.json';
+                        } else {
+                            url = 'https://' + c.bucket + '.cos.' + (c.region || 'ap-shanghai') + '.myqcloud.com/wedding-config.json';
                         }
+                        
+                        try {
+                            const res = await fetch(url + '?t=' + Date.now());
+                            if (res.ok) {
+                                const data = await res.json();
+                                currentConfig = { ...defaultConfig, ...data };
+                            }
+                        } catch(e) {}
                     }
                 } catch(e){}
             }
@@ -294,8 +232,8 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        // 每5秒检查云端配置更新
-        setInterval(loadConfig, 5000);
+        // 每10秒检查云端配置
+        setInterval(loadConfig, 10000);
 
         loadConfig();
     </script>

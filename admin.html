@@ -16,13 +16,9 @@
         .login-box input:focus{outline:none;border-color:#e8a4a4}
         .login-btn{width:100%;padding:15px;background:linear-gradient(135deg,#e8a4a4,#d49191);color:#fff;border:none;border-radius:12px;font-size:16px;cursor:pointer;transition:all .3s}
         .login-btn:hover{transform:translateY(-2px)}
-        .login-btn:disabled{background:#d0c0c0;cursor:not-allowed}
         .login-error{color:#e57373;font-size:13px;margin-top:10px;display:none}
         .login-error.show{display:block}
         .login-hint{color:#c8b0b0;font-size:12px;margin-top:15px}
-        .sync-notice{background:#e3f2fd;border:1px solid #90caf9;border-radius:12px;padding:15px;margin-bottom:15px;text-align:left}
-        .sync-notice-title{color:#1565c0;font-size:13px;font-weight:500;margin-bottom:8px}
-        .sync-notice-item{color:#666;font-size:12px;margin-bottom:6px}
         .container{max-width:600px;margin:0 auto;display:none}
         .container.show{display:block}
         .header{text-align:center;padding:30px 20px;position:relative}
@@ -41,7 +37,6 @@
         .form-label{display:block;color:#8a7a7a;font-size:13px;margin-bottom:6px;font-weight:500}
         .form-input{width:100%;padding:10px 14px;border:2px solid #f0e8e8;border-radius:10px;font-size:15px;color:#5a4a4a;transition:all .3s;background:#fdfbfb}
         .form-input:focus{outline:none;border-color:#e8a4a4}
-        .form-input.small{font-size:13px;padding:8px 12px}
         .color-picker-wrapper{display:flex;align-items:center;gap:12px}
         .color-picker{width:44px;height:44px;border:none;border-radius:10px;cursor:pointer;padding:0;overflow:hidden}
         .color-picker::-webkit-color-swatch-wrapper{padding:0}
@@ -64,7 +59,7 @@
         .btn-primary:hover{transform:translateY(-2px)}
         .btn-secondary{background:#fff;color:#c48484;border:2px solid #f0d4d4}
         .btn-secondary:hover{background:#fff5f5}
-        .btn-small{padding:8px 16px;font-size:13px;border-radius:20px}
+        .btn-small{padding:10px 16px;font-size:13px;border-radius:20px}
         .preview-box{background:#fdfbfb;border-radius:15px;padding:25px;text-align:center;border:2px dashed #f0d4d4}
         .preview-title{font-size:22px;margin-bottom:8px;color:#333}
         .preview-subtitle{font-size:13px;color:#888}
@@ -75,20 +70,15 @@
         .copy-btn{padding:6px 12px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;font-size:12px;cursor:pointer;color:#666}
         .copy-btn:hover{background:#f0f0f0}
         .link-box-hint{font-size:11px;color:#999;margin-top:6px}
-        .status-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:12px 15px;margin-bottom:15px;font-size:13px;color:#2e7d32;display:flex;align-items:center;gap:10px}
-        .status-bar.error{background:#ffebee;border-color:#ef9a9a;color:#c62828}
-        .status-dot{width:8px;height:8px;border-radius:50%;background:#4caf50}
-        .status-bar.error .status-dot{background:#f44336}
-        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,.8);color:#fff;padding:12px 24px;border-radius:25px;font-size:14px;opacity:0;transition:all .3s;z-index:1000}
-        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
         .guide-box{background:#fff8e6;border:1px solid #ffe4a0;border-radius:12px;padding:15px;margin-bottom:15px}
         .guide-box-title{color:#996600;font-size:14px;font-weight:500;margin-bottom:10px}
-        .guide-box-step{color:#666;font-size:12px;margin-bottom:6px;display:flex;gap:8px}
+        .guide-box-step{color:#666;font-size:12px;margin-bottom:8px;display:flex;gap:8px}
         .guide-box-step span:first-child{color:#ff9800;font-weight:bold}
-        .cloud-status{padding:10px 15px;border-radius:10px;font-size:13px;margin-bottom:15px;display:flex;align-items:center;gap:10px}
-        .cloud-status.connected{background:#e8f5e9;border:1px solid #a5d6a7;color:#2e7d32}
-        .cloud-status.disconnected{background:#f5f5f5;border:1px solid #e0e0e0;color:#666}
-        .cloud-status.error{background:#ffebee;border:1px solid #ef9a9a;color:#c62828}
+        .cloud-url-box{background:#e3f2fd;border:1px solid #90caf9;border-radius:12px;padding:15px;margin-bottom:15px}
+        .cloud-url-title{color:#1565c0;font-size:14px;font-weight:500;margin-bottom:10px}
+        .cloud-url-content{font-size:13px;color:#333;word-break:break-all;background:#fff;padding:10px;border-radius:8px;margin-bottom:10px}
+        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,.8);color:#fff;padding:12px 24px;border-radius:25px;font-size:14px;opacity:0;transition:all .3s;z-index:1000}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
         @media(max-width:480px){.header h1{font-size:22px}.btn-group{flex-direction:column}}
     </style>
 </head>
@@ -99,23 +89,13 @@
         <h1 class="login-title">管理后台</h1>
         <p class="login-subtitle" id="loginSubtitle">请设置管理员密码</p>
         
-        <div class="sync-notice">
-            <div class="sync-notice-title">☁️ 首次使用需要配置云存储</div>
-            <div class="sync-notice-item">• 填写腾讯云COS信息实现多设备同步</div>
-            <div class="sync-notice-item">• 密钥仅保存在本地浏览器</div>
-        </div>
-        
         <div class="login-box">
-            <input type="text" class="form-input" id="bucketInput" placeholder="存储桶名称 (Bucket)" style="text-align:left;letter-spacing:0">
-            <input type="text" class="form-input" id="regionInput" placeholder="地域 (Region)" value="ap-shanghai" style="text-align:left;letter-spacing:0">
-            <input type="text" class="form-input" id="secretIdInput" placeholder="SecretId" style="text-align:left;letter-spacing:0">
-            <input type="password" class="form-input" id="secretKeyInput" placeholder="SecretKey" style="text-align:left;letter-spacing:0">
-            <input type="password" id="passwordInput" placeholder="设置管理密码（至少4位）" maxlength="20">
-            <button class="login-btn" id="loginBtn" onclick="doLogin()">确认并连接云端</button>
+            <input type="password" id="passwordInput" placeholder="设置/输入密码（至少4位）" maxlength="20">
+            <button class="login-btn" id="loginBtn" onclick="doLogin()">进入后台</button>
             <p class="login-error" id="loginError">密码错误</p>
         </div>
         
-        <p class="login-hint">密钥保存在本地，请放心使用</p>
+        <p class="login-hint">修改配置后需下载并上传到云端</p>
     </div>
 
     <!-- 设置页 -->
@@ -127,12 +107,7 @@
 
         <div class="header">
             <h1>管理后台</h1>
-            <p>云端同步 · 多设备管理</p>
-        </div>
-
-        <div class="cloud-status connected" id="cloudStatus">
-            <span class="status-dot"></span>
-            <span id="cloudStatusText">云端已连接</span>
+            <p>配置管理 · 手动同步</p>
         </div>
 
         <div class="link-box">
@@ -143,25 +118,34 @@
             </div>
         </div>
 
+        <div class="guide-box">
+            <div class="guide-box-title">📤 同步到云端步骤</div>
+            <div class="guide-box-step"><span>1.</span> 修改下方配置后点击「下载配置」</div>
+            <div class="guide-box-step"><span>2.</span> 登录腾讯云COS控制台</div>
+            <div class="guide-box-step"><span>3.</span> 进入存储桶，上传下载的配置文件</div>
+            <div class="guide-box-step"><span>4.</span> 文件名改为：wedding-config.json</div>
+        </div>
+
+        <div class="cloud-url-box">
+            <div class="cloud-url-title">☁️ 配置文件访问地址</div>
+            <div class="cloud-url-content" id="cloudUrl">设置存储桶信息后显示</div>
+            <div class="guide-box-step"><span>💡</span> 在存储桶设置页面，找到「基础配置」→「自定义域名」，填入上面的地址</div>
+        </div>
+
         <div class="config-section">
-            <div class="section-title">☁️ 云存储配置</div>
+            <div class="section-title">☁️ 云存储设置（可选）</div>
             <div class="form-group">
-                <label class="form-label">存储桶 (Bucket)</label>
-                <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos-123456">
+                <label class="form-label">存储桶名称 (Bucket)</label>
+                <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos">
             </div>
             <div class="form-group">
                 <label class="form-label">地域 (Region)</label>
                 <input type="text" class="form-input" id="region" placeholder="例如：ap-shanghai" value="ap-shanghai">
             </div>
             <div class="form-group">
-                <label class="form-label">SecretId</label>
-                <input type="text" class="form-input" id="secretId" placeholder="SecretId">
+                <label class="form-label">自定义域名（可选，用于访问配置文件）</label>
+                <input type="text" class="form-input" id="customDomain" placeholder="例如：config.yourdomain.com">
             </div>
-            <div class="form-group">
-                <label class="form-label">SecretKey</label>
-                <input type="password" class="form-input" id="secretKey" placeholder="SecretKey">
-            </div>
-            <button class="btn btn-secondary btn-small" onclick="testCloud()">🔍 测试连接</button>
         </div>
 
         <div class="config-section">
@@ -235,16 +219,14 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-secondary" onclick="syncFromCloud()">📥 同步云端</button>
+            <button class="btn btn-primary" onclick="downloadConfig()">📥 下载配置</button>
             <button class="btn btn-secondary" onclick="resetConfig()">恢复默认</button>
-            <button class="btn btn-primary" onclick="saveConfig()">💾 保存并同步</button>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
-        const CONFIG_KEY = 'wedding-config.json';
         const defaultConfig = {
             pageTitle: '婚礼照片收集',
             pageSubtitle: '记录美好瞬间 · 分享幸福时刻',
@@ -256,26 +238,10 @@
         };
 
         let currentConfig = { ...defaultConfig };
-        let cloudConfig = {};
         let adminPassword = '';
 
-        // 加载云配置
-        function loadCloudConfig() {
-            const saved = localStorage.getItem('cloudConfig');
-            if (saved) {
-                cloudConfig = JSON.parse(saved);
-            }
-            return cloudConfig;
-        }
-
-        // 保存云配置
-        function saveCloudConfig() {
-            localStorage.setItem('cloudConfig', JSON.stringify(cloudConfig));
-        }
-
-        // 检查登录状态
         function checkLogin() {
-            loadCloudConfig();
+            adminPassword = localStorage.getItem('adminPassword') || '';
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 showConfigPage();
             } else {
@@ -289,267 +255,93 @@
             document.getElementById('passwordInput').value = '';
             document.getElementById('loginError').classList.remove('show');
 
-            if (cloudConfig.bucket) {
-                document.getElementById('bucketInput').value = cloudConfig.bucket || '';
-                document.getElementById('regionInput').value = cloudConfig.region || 'ap-shanghai';
-                document.getElementById('secretIdInput').value = cloudConfig.secretId || '';
-                document.getElementById('secretKeyInput').value = cloudConfig.secretKey || '';
-            }
-
-            const btn = document.getElementById('loginBtn');
             const subtitle = document.getElementById('loginSubtitle');
-            if (cloudConfig.adminPassword) {
-                subtitle.textContent = '请输入管理密码';
-                btn.textContent = '验证密码并连接';
+            const btn = document.getElementById('loginBtn');
+            if (adminPassword) {
+                subtitle.textContent = '请输入管理员密码';
+                btn.textContent = '登录';
             } else {
                 subtitle.textContent = '请设置管理员密码';
-                btn.textContent = '确认并连接云端';
+                btn.textContent = '确认';
             }
         }
 
         function showConfigPage() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('configPage').classList.add('show');
-            applyToForm();
-            updatePreview();
+            loadConfig();
             updateShareUrl();
-            testCloud();
         }
 
-        // 腾讯云签名
-        function createSignature(method, key, query, headers, secretId, secretKey) {
-            const date = new Date().toISOString().split('T')[0];
-            const signTime = Math.floor(Date.now()/1000) - 300 + ';' + (Math.floor(Date.now()/1000) + 3600);
-            
-            const httpString = method.toLowerCase() + '\n/' + key.split('?')[0] + '\n' + (query || '') + '\n' + 
-                'host:' + cloudConfig.bucket + '.cos.' + cloudConfig.region + '.myqcloud.com\n\n';
-            
-            const sha1edHttpString = CryptoJS.SHA1(httpString).toString();
-            const stringToSign = 'sha1\n' + signTime + '\n' + sha1edHttpString + '\n';
-            const signature = CryptoJS.HmacSHA1(stringToSign, secretKey).toString();
-            
-            return {
-                signature: signature,
-                signTime: signTime
-            };
-        }
-
-        // 简单的SHA1实现
-        const CryptoJS = {
-            SHA1: function(s) {
-                function rotl(n,s) {return (n<<s)|(n>>>(32-s));}
-                function sha1hex(num) {
-                    var hex="";for(var j=0;j<num.length*32;j+=8)hex+=((num[j>>5]>>>(24-j%32))&1).toString(16);
-                    return hex;
-                }
-                function sha1blk(s) {
-                    var blks=[];for(var i=0;i<s.length*8;i+=512){var blk=s.slice(i,i+512);
-                        var words=[];for(var j=0;j<16;j++)words[j]=blk.readInt32BE(j*4);
-                        words[15]=s.length*8;blks.push(words);}
-                    var h=0x67452301,ee=0xEFCDAB89,a8=0x98BADCFE,f3=0x10325476,c1=0xC3D2E1F0;
-                    blks.forEach(function(blk){
-                        var w=[];for(var j=0;j<80;j++)w[j]=j<16?blk[j]:rotl(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
-                        var hh=h,ee2=ee,a3=a8,f=f3,c2=c1;
-                        for(var j=0;j<80;j++){
-                            var r=(j/20)|0,t=rotl(hh,5)+((r==0?ee2:(r==1?a8:f)))+c2+w[j]+(r==0?0x5A827999:(r==1?0x6ED9EBA1:(r==2?0x8F1BBCDC:0xCA62C1D6)))|0;
-                            c2=f;f=a8;a8=rotl(ee2,30);ee2=hh;hh=t;
-                        }
-                        h=h+hh|0;ee=ee+ee2|0;a8=a8+a3|0;f=f+c1|0;c1=c1+c2|0;
-                    });
-                    return [h,ee,a8,f,c1];
-                }
-                return sha1hex(sha1blk(s));
-            },
-            HmacSHA1: function(s,k) {
-                function f(b,c,d){return(c&b)+((~c)&d);}
-                function g(b,c){return(b&c)+((~b)&d);}
-                function h(b,c,d){return b^c^d;}
-                function R(b,c){return(b>>>c)|(b<<(32-c));}
-                var ba=s.split('').map(function(c){return c.charCodeAt(0);});
-                var M=64,O=[];
-                ba.push(0x80);while(ba.length%M)ba.push(0);
-                var K=[0x5a827999,0x6ed9eba1,0x8f1bbcdc,0xca62c1d6];
-                var L=ba.length/4|0,H=[0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476,0xC3D2E1F0];
-                for(var i=0;i<L;i++){
-                    var w=[],B=ba.slice(i*64,(i+1)*64);
-                    for(var j=0;j<16;j++)w[j]=B.readInt32BE(j*4);
-                    var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4];
-                    for(var j=0;j<80;j++){
-                        var t=R(a,5)+((j<20)?(b^c^d)+0x5a827999:(j<40?b^c^d+0x6ed9eba1:(j<60?(b|c)+0x8f1bbcdc:b^c^d+0xca62c1d6)))+e+w[j]+K[(j/20)|0]|0;
-                        e=d;d=c;c=R(b,30);b=a;a=t;
-                    }
-                    H[0]=H[0]+a|0;H[1]=H[1]+b|0;H[2]=H[2]+c|0;H[3]=H[3]+d|0;H[4]=H[4]+e|0;
-                }
-                return H.map(function(x){return x.toString(16).padStart(8,'0');}).join('');
-            }
-        };
-
-        // 获取临时凭证
-        async function getTempCredential() {
-            const now = Math.floor(Date.now() / 1000);
-            const exp = now + 3600;
-            
-            const secretId = cloudConfig.secretId;
-            const secretKey = cloudConfig.secretKey;
-            
-            const signTime = now + ';' + exp;
-            const httpString = 'cos.getCredential\n' + CONFIG_KEY + '\nhost=' + cloudConfig.bucket + '.cos.' + cloudConfig.region + '.myqcloud.com\n';
-            const stringToSign = 'sha1\n' + signTime + '\n' + CryptoJS.SHA1(httpString) + '\n';
-            const signature = CryptoJS.HmacSHA1(stringToSign, secretKey);
-            
-            return { signature, signTime };
-        }
-
-        // 测试云连接
-        async function testCloud() {
-            if (!cloudConfig.bucket || !cloudConfig.secretId || !cloudConfig.secretKey) {
-                updateCloudStatus('disconnected', '请先配置云存储信息');
-                return;
-            }
-
-            updateCloudStatus('syncing', '正在连接...');
-
-            try {
-                const cred = await getTempCredential();
-                const host = cloudConfig.bucket + '.cos.' + cloudConfig.region + '.myqcloud.com';
-                const url = 'https://' + host + '/' + CONFIG_KEY;
-
-                const signature = cred.signature;
-                const auth = 'q-sign-algorithm=sha1&q-ak=' + cloudConfig.secretId + '&q-sign-time=' + cred.signTime + '&q-key-time=' + cred.signTime + '&q-header-list=host&q-url-param-list=&q-signature=' + signature;
-
-                const res = await fetch(url + '?' + auth, { method: 'HEAD' });
-                
-                if (res.ok || res.status === 404) {
-                    updateCloudStatus('connected', '云端已连接');
-                } else {
-                    updateCloudStatus('error', '连接失败');
-                }
-            } catch (e) {
-                updateCloudStatus('error', '连接失败: ' + e.message);
-            }
-        }
-
-        function updateCloudStatus(type, text) {
-            const el = document.getElementById('cloudStatus');
-            const textEl = document.getElementById('cloudStatusText');
-            el.className = 'cloud-status ' + type;
-            textEl.textContent = text;
-        }
-
-        // 从云端加载配置
-        async function loadFromCloud() {
-            if (!cloudConfig.bucket || !cloudConfig.secretId || !cloudConfig.secretKey) return null;
-
-            try {
-                const cred = await getTempCredential();
-                const host = cloudConfig.bucket + '.cos.' + cloudConfig.region + '.myqcloud.com';
-                const url = 'https://' + host + '/' + CONFIG_KEY;
-
-                const auth = 'q-sign-algorithm=sha1&q-ak=' + cloudConfig.secretId + '&q-sign-time=' + cred.signTime + '&q-key-time=' + cred.signTime + '&q-header-list=host&q-url-param-list=&q-signature=' + cred.signature;
-
-                const res = await fetch(url + '?' + auth);
-                if (res.ok) {
-                    const data = await res.json();
-                    return data;
-                }
-            } catch (e) {
-                console.log('加载云配置失败', e);
-            }
-            return null;
-        }
-
-        // 保存到云端
-        async function saveToCloud(config) {
-            if (!cloudConfig.bucket || !cloudConfig.secretId || !cloudConfig.secretKey) {
-                showToast('请先配置云存储');
-                return false;
-            }
-
-            try {
-                updateCloudStatus('syncing', '正在同步...');
-                
-                const cred = await getTempCredential();
-                const host = cloudConfig.bucket + '.cos.' + cloudConfig.region + '.myqcloud.com';
-                const url = 'https://' + host + '/' + CONFIG_KEY;
-
-                const auth = 'q-sign-algorithm=sha1&q-ak=' + cloudConfig.secretId + '&q-sign-time=' + cred.signTime + '&q-key-time=' + cred.signTime + '&q-header-list=host&q-url-param-list=&q-signature=' + cred.signature;
-
-                const res = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Host': host,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(config)
-                });
-
-                if (res.ok) {
-                    updateCloudStatus('connected', '已同步到云端');
-                    return true;
-                }
-            } catch (e) {
-                updateCloudStatus('error', '同步失败');
-            }
-            return false;
-        }
-
-        // 执行登录
-        async function doLogin() {
-            const bucket = document.getElementById('bucketInput').value.trim();
-            const region = document.getElementById('regionInput').value.trim() || 'ap-shanghai';
-            const secretId = document.getElementById('secretIdInput').value.trim();
-            const secretKey = document.getElementById('secretKeyInput').value.trim();
+        function doLogin() {
             const password = document.getElementById('passwordInput').value;
 
-            if (!bucket || !secretId || !secretKey) {
-                document.getElementById('loginError').textContent = '请填写完整的云存储信息';
-                document.getElementById('loginError').classList.add('show');
-                return;
-            }
-
-            cloudConfig = { bucket, region, secretId, secretKey };
-            saveCloudConfig();
-
-            if (cloudConfig.adminPassword) {
-                if (password !== cloudConfig.adminPassword) {
-                    document.getElementById('loginError').textContent = '密码错误';
+            if (!adminPassword) {
+                if (password.length < 4) {
+                    document.getElementById('loginError').textContent = '密码至少4位';
                     document.getElementById('loginError').classList.add('show');
                     return;
                 }
+                adminPassword = password;
+                localStorage.setItem('adminPassword', password);
                 sessionStorage.setItem('adminLoggedIn', 'true');
+                showToast('密码已设置');
                 showConfigPage();
-                return;
+            } else {
+                if (password === adminPassword) {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    showConfigPage();
+                } else {
+                    document.getElementById('loginError').textContent = '密码错误';
+                    document.getElementById('loginError').classList.add('show');
+                    document.getElementById('passwordInput').value = '';
+                }
             }
-
-            if (password.length < 4) {
-                document.getElementById('loginError').textContent = '密码至少4位';
-                document.getElementById('loginError').classList.add('show');
-                return;
-            }
-
-            cloudConfig.adminPassword = password;
-            adminPassword = password;
-            saveCloudConfig();
-
-            const config = { ...defaultConfig, adminPassword: password };
-            await saveToCloud(config);
-
-            sessionStorage.setItem('adminLoggedIn', 'true');
-            showToast('密码已设置并同步到云端');
-            showConfigPage();
         }
+
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doLogin();
+        });
 
         function logout() {
             sessionStorage.removeItem('adminLoggedIn');
             showLoginPage();
         }
 
-        function applyToForm() {
-            document.getElementById('bucket').value = cloudConfig.bucket || '';
-            document.getElementById('region').value = cloudConfig.region || 'ap-shanghai';
-            document.getElementById('secretId').value = cloudConfig.secretId || '';
-            document.getElementById('secretKey').value = cloudConfig.secretKey || '';
+        function loadConfig() {
+            const saved = localStorage.getItem('weddingPhotoConfig');
+            if (saved) {
+                try {
+                    currentConfig = { ...defaultConfig, ...JSON.parse(saved) };
+                } catch (e) {}
+            }
 
+            const cloud = localStorage.getItem('cloudSettings');
+            if (cloud) {
+                const c = JSON.parse(cloud);
+                document.getElementById('bucket').value = c.bucket || '';
+                document.getElementById('region').value = c.region || 'ap-shanghai';
+                document.getElementById('customDomain').value = c.customDomain || '';
+                updateCloudUrl(c);
+            }
+
+            applyToForm();
+            updatePreview();
+        }
+
+        function updateCloudUrl(c) {
+            if (c.bucket) {
+                let url;
+                if (c.customDomain) {
+                    url = 'https://' + c.customDomain + '/wedding-config.json';
+                } else {
+                    url = 'https://' + c.bucket + '.cos.' + (c.region || 'ap-shanghai') + '.myqcloud.com/wedding-config.json';
+                }
+                document.getElementById('cloudUrl').textContent = url;
+            }
+        }
+
+        function applyToForm() {
             document.getElementById('pageTitle').value = currentConfig.pageTitle;
             document.getElementById('pageSubtitle').value = currentConfig.pageSubtitle;
             document.getElementById('uploadText').value = currentConfig.uploadText;
@@ -576,23 +368,27 @@
             document.getElementById('shareUrl').textContent = window.location.href.replace('admin.html', 'index.html');
         }
 
-        async function saveConfig() {
+        function downloadConfig() {
+            // 修改密码
             const newPwd = document.getElementById('newPassword').value;
             const confirmPwd = document.getElementById('confirmPassword').value;
 
             if (newPwd) {
                 if (newPwd.length < 4) { showToast('密码至少4位'); return; }
                 if (newPwd !== confirmPwd) { showToast('两次密码不一致'); return; }
-                cloudConfig.adminPassword = newPwd;
+                adminPassword = newPwd;
+                localStorage.setItem('adminPassword', newPwd);
                 showToast('密码已修改');
             }
 
-            // 保存云配置
-            cloudConfig.bucket = document.getElementById('bucket').value.trim();
-            cloudConfig.region = document.getElementById('region').value.trim() || 'ap-shanghai';
-            cloudConfig.secretId = document.getElementById('secretId').value.trim();
-            cloudConfig.secretKey = document.getElementById('secretKey').value.trim();
-            saveCloudConfig();
+            // 保存云设置
+            const cloud = {
+                bucket: document.getElementById('bucket').value.trim(),
+                region: document.getElementById('region').value.trim() || 'ap-shanghai',
+                customDomain: document.getElementById('customDomain').value.trim()
+            };
+            localStorage.setItem('cloudSettings', JSON.stringify(cloud));
+            updateCloudUrl(cloud);
 
             currentConfig = {
                 ...currentConfig,
@@ -602,39 +398,31 @@
                 statLabel: document.getElementById('statLabel').value || defaultConfig.statLabel,
                 themeColor: document.getElementById('themeColorValue').value,
                 showDecorations: document.getElementById('showDecorations').checked,
-                adminPassword: cloudConfig.adminPassword
+                adminPassword: adminPassword
             };
 
             localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
-
-            const success = await saveToCloud(currentConfig);
-            if (success) {
-                showToast('配置已保存并同步到云端');
-            }
-
             updatePreview();
+
+            // 下载配置文件
+            const blob = new Blob([JSON.stringify(currentConfig, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wedding-config.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmPassword').value = '';
-        }
 
-        async function syncFromCloud() {
-            showToast('正在同步...');
-            const cloudData = await loadFromCloud();
-            if (cloudData) {
-                currentConfig = { ...defaultConfig, ...cloudData };
-                cloudConfig.adminPassword = cloudData.adminPassword || '';
-                localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
-                applyToForm();
-                updatePreview();
-                showToast('已从云端同步');
-            } else {
-                showToast('云端无配置或同步失败');
-            }
+            showToast('配置已保存，请上传到云端');
         }
 
         function resetConfig() {
             if (confirm('确定要恢复默认设置吗？')) {
-                currentConfig = { ...defaultConfig };
+                localStorage.removeItem('weddingPhotoConfig');
+                currentConfig = { ...defaultConfig, adminPassword };
                 applyToForm();
                 updatePreview();
                 showToast('已恢复默认');
@@ -654,17 +442,18 @@
             showToast('链接已复制');
         }
 
-        // 颜色
         document.getElementById('themeColorPicker').addEventListener('input', (e) => {
             document.getElementById('themeColorValue').value = e.target.value;
             updatePresetActive();
         });
+
         document.getElementById('themeColorValue').addEventListener('input', (e) => {
             if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
                 document.getElementById('themeColorPicker').value = e.target.value;
                 updatePresetActive();
             }
         });
+
         document.getElementById('presetColors').addEventListener('click', (e) => {
             const preset = e.target.closest('.preset-color');
             if (preset) {
@@ -673,6 +462,7 @@
                 updatePresetActive();
             }
         });
+
         document.getElementById('pageTitle').addEventListener('input', updatePreview);
         document.getElementById('pageSubtitle').addEventListener('input', updatePreview);
 
