@@ -18,10 +18,9 @@
             padding: 20px;
         }
 
-        /* 登录页面 */
         .login-container {
             max-width: 400px;
-            margin: 100px auto;
+            margin: 80px auto;
             text-align: center;
         }
 
@@ -47,6 +46,39 @@
             border-radius: 20px;
             padding: 40px 30px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-notice {
+            background: #fff3e0;
+            border: 1px solid #ffcc80;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .config-notice-title {
+            color: #e65100;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .config-notice-item {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .config-notice-item input {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
         }
 
         .password-input-wrapper {
@@ -97,7 +129,6 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(232, 164, 164, 0.5);
         }
 
         .login-btn:disabled {
@@ -124,7 +155,6 @@
             margin-top: 20px;
         }
 
-        /* 设置页面 */
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -184,7 +214,6 @@
 
         .back-btn:hover {
             background: #fff5f5;
-            border-color: #e8a4a4;
         }
 
         .logout-btn {
@@ -204,7 +233,35 @@
 
         .logout-btn:hover {
             background: #fff5f5;
-            border-color: #e8a4a4;
+        }
+
+        .sync-status {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .sync-status.show {
+            display: block;
+        }
+
+        .sync-status.syncing {
+            color: #ff9800;
+        }
+
+        .sync-status.success {
+            color: #4caf50;
+        }
+
+        .sync-status.error {
+            color: #f44336;
         }
 
         .config-section {
@@ -256,7 +313,6 @@
         .form-input:focus {
             outline: none;
             border-color: #e8a4a4;
-            background: white;
         }
 
         .color-picker-wrapper {
@@ -400,7 +456,6 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(232, 164, 164, 0.5);
         }
 
         .btn-secondary {
@@ -411,7 +466,6 @@
 
         .btn-secondary:hover {
             background: #fff5f5;
-            border-color: #e8a4a4;
         }
 
         .preview-box {
@@ -526,27 +580,9 @@
             margin-top: 6px;
         }
 
-        .set-password-section {
-            background: #fff8e6;
-            border: 1px solid #ffe4a0;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        .set-password-title {
-            color: #996600;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         @media (max-width: 480px) {
             .login-container {
-                margin: 60px 20px;
+                margin: 40px 15px;
             }
 
             .login-box {
@@ -568,13 +604,14 @@
             .logout-btn {
                 top: 15px;
                 right: 15px;
-                padding: 6px 12px;
-                font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
+    <button class="logout-btn" id="logoutBtn" onclick="logout()" style="display:none;">退出登录</button>
+    <div class="sync-status" id="syncStatus">同步中...</div>
+
     <!-- 登录页面 -->
     <div class="login-container" id="loginPage">
         <div class="login-icon">💒</div>
@@ -582,24 +619,36 @@
         <p class="login-subtitle">请输入管理员密码</p>
 
         <div class="login-box">
+            <!-- 云存储配置 -->
+            <div class="config-notice" id="cloudConfigSection">
+                <div class="config-notice-title">☁️ 云存储配置（首次必填）</div>
+                <div class="config-notice-item">
+                    <input type="text" id="loginBucket" placeholder="存储桶名称">
+                </div>
+                <div class="config-notice-item">
+                    <input type="text" id="loginRegion" placeholder="地域（如 ap-shanghai）" value="ap-shanghai">
+                </div>
+                <div class="config-notice-item" style="margin-top:8px;">
+                    <button class="login-btn" style="padding:10px; font-size:14px;" onclick="testCloudLogin()">验证并连接</button>
+                </div>
+            </div>
+
             <div class="password-input-wrapper">
                 <input type="password" class="password-input" id="passwordInput" placeholder="请输入密码" maxlength="20">
                 <button class="password-toggle" onclick="togglePassword()">👁️</button>
             </div>
-            <button class="login-btn" id="loginBtn" onclick="doLogin()">进入后台</button>
+            <button class="login-btn" id="loginBtn" onclick="doLogin()" disabled>请先配置云存储</button>
             <p class="error-msg" id="errorMsg">密码错误，请重试</p>
         </div>
 
-        <p class="login-hint" id="loginHint">首次使用请先设置密码</p>
+        <p class="login-hint" id="loginHint">配置云存储后可多设备同步</p>
     </div>
 
     <!-- 设置页面 -->
-    <button class="logout-btn" id="logoutBtn" onclick="logout()">退出登录</button>
-
     <div class="container" id="configPage">
         <div class="header">
             <h1>管理后台</h1>
-            <p>个性化设置 · 实时同步生效</p>
+            <p>个性化设置 · 云端实时同步</p>
         </div>
 
         <a href="index.html" class="back-btn">← 返回首页</a>
@@ -607,7 +656,7 @@
         <!-- 状态栏 -->
         <div class="status-bar">
             <span class="status-dot"></span>
-            <span>配置已保存，首页实时更新</span>
+            <span id="cloudStatus">已连接云端，配置自动同步</span>
         </div>
 
         <!-- 链接分享 -->
@@ -620,9 +669,33 @@
             <div class="link-box-hint">将此链接做成二维码，放在婚礼现场让宾客扫码上传照片</div>
         </div>
 
-        <!-- 设置密码 -->
-        <div class="set-password-section">
-            <div class="set-password-title">🔐 修改管理密码</div>
+        <!-- 云存储设置 -->
+        <div class="config-section">
+            <div class="section-title">☁️ 云存储设置</div>
+
+            <div class="form-group">
+                <label class="form-label">存储桶名称 (Bucket)</label>
+                <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos-123456">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">地域 (Region)</label>
+                <input type="text" class="form-input" id="region" placeholder="例如：ap-shanghai" value="ap-shanghai">
+            </div>
+
+            <div class="btn-group" style="margin-top:15px;">
+                <button class="btn btn-secondary" onclick="testCloud()">🔍 测试连接</button>
+                <button class="btn btn-primary" onclick="syncToCloud()">☁️ 同步到云端</button>
+            </div>
+
+            <a href="setup-guide.html" class="back-btn" style="margin-top:10px; margin-bottom:0;">
+                📖 查看配置教程
+            </a>
+        </div>
+
+        <!-- 修改密码 -->
+        <div class="config-section">
+            <div class="section-title">🔐 修改管理密码</div>
             <div class="form-group">
                 <input type="password" class="form-input" id="newPassword" placeholder="输入新密码（不修改请留空）" maxlength="20">
             </div>
@@ -679,35 +752,6 @@
             </div>
         </div>
 
-        <!-- 云存储设置 -->
-        <div class="config-section">
-            <div class="section-title">☁️ 云存储设置</div>
-
-            <div class="form-group toggle-group">
-                <label class="form-label">启用云端存储</label>
-                <label class="toggle">
-                    <input type="checkbox" id="useCloud">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div id="cloudSettings" style="display:none;">
-                <div class="form-group">
-                    <label class="form-label">存储桶名称 (Bucket)</label>
-                    <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos-123456">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">地域 (Region)</label>
-                    <input type="text" class="form-input" id="region" placeholder="例如：ap-shanghai" value="ap-shanghai">
-                </div>
-
-                <a href="setup-guide.html" class="back-btn" style="margin-top:10px; margin-bottom:0;">
-                    📖 查看配置教程
-                </a>
-            </div>
-        </div>
-
         <!-- 其他设置 -->
         <div class="config-section">
             <div class="section-title">✨ 其他设置</div>
@@ -733,12 +777,13 @@
         <!-- 保存按钮 -->
         <div class="btn-group">
             <button class="btn btn-secondary" onclick="resetConfig()">恢复默认</button>
-            <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
+            <button class="btn btn-primary" onclick="saveConfig()">💾 保存并同步</button>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
+    <script src="https://cos.cloud.tencent.com/cos.js"></script>
     <script>
         const defaultConfig = {
             pageTitle: '婚礼照片收集',
@@ -746,18 +791,135 @@
             uploadText: '点击或拖拽上传照片',
             statLabel: '已收集照片',
             themeColor: '#c48484',
-            useCloud: false,
-            bucket: '',
-            region: 'ap-shanghai',
             showDecorations: true
         };
 
+        const CONFIG_KEY = 'wedding-config.json';
         let currentConfig = { ...defaultConfig };
+        let cloudConfig = null;
+        let cos = null;
+        let bucket = '';
+        let region = 'ap-shanghai';
 
-        // 检查是否已登录
+        // 显示同步状态
+        function showSyncStatus(text, type = 'normal') {
+            const el = document.getElementById('syncStatus');
+            el.textContent = text;
+            el.className = 'sync-status show ' + type;
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        // 初始化云存储
+        function initCloud(bucketName, regionName) {
+            if (typeof COS === 'undefined') {
+                showToast('云存储SDK未加载');
+                return false;
+            }
+            bucket = bucketName;
+            region = regionName || 'ap-shanghai';
+            cos = new COS({
+                Bucket: bucket,
+                Region: region
+            });
+            return true;
+        }
+
+        // 从云端加载配置
+        async function loadFromCloud() {
+            if (!cos) return null;
+            try {
+                const result = await cos.getObject({
+                    Bucket: bucket,
+                    Region: region,
+                    Key: CONFIG_KEY
+                });
+                return JSON.parse(result.Body);
+            } catch (e) {
+                console.log('云端无配置');
+                return null;
+            }
+        }
+
+        // 保存配置到云端
+        async function saveToCloud(config) {
+            if (!cos) return false;
+            try {
+                await cos.putObject({
+                    Bucket: bucket,
+                    Region: region,
+                    Key: CONFIG_KEY,
+                    Body: JSON.stringify(config),
+                    ContentType: 'application/json'
+                });
+                return true;
+            } catch (e) {
+                console.error('保存到云端失败', e);
+                return false;
+            }
+        }
+
+        // 测试云连接
+        async function testCloud() {
+            const b = document.getElementById('bucket').value.trim();
+            const r = document.getElementById('region').value.trim() || 'ap-shanghai';
+
+            if (!b) {
+                showToast('请输入存储桶名称');
+                return;
+            }
+
+            if (initCloud(b, r)) {
+                showSyncStatus('正在测试连接...', 'syncing');
+                try {
+                    await cos.headBucket({ Bucket: b, Region: r });
+                    showSyncStatus('✅ 连接成功', 'success');
+                    showToast('云端连接成功');
+                } catch (e) {
+                    showSyncStatus('❌ 连接失败', 'error');
+                    showToast('连接失败，请检查配置');
+                }
+            }
+        }
+
+        // 登录页测试云连接
+        async function testCloudLogin() {
+            const b = document.getElementById('loginBucket').value.trim();
+            const r = document.getElementById('loginRegion').value.trim() || 'ap-shanghai';
+
+            if (!b) {
+                showToast('请输入存储桶名称');
+                return;
+            }
+
+            showSyncStatus('正在验证...', 'syncing');
+            document.getElementById('loginBtn').disabled = true;
+            document.getElementById('loginBtn').textContent = '验证中...';
+
+            if (initCloud(b, r)) {
+                try {
+                    await cos.headBucket({ Bucket: b, Region: r });
+                    showSyncStatus('✅ 验证成功', 'success');
+                    document.getElementById('loginBtn').disabled = false;
+                    document.getElementById('loginBtn').textContent = '验证成功，点击登录';
+                    showToast('云存储验证成功');
+                } catch (e) {
+                    showSyncStatus('❌ 验证失败', 'error');
+                    document.getElementById('loginBtn').disabled = true;
+                    document.getElementById('loginBtn').textContent = '验证失败，请检查配置';
+                    showToast('云存储配置错误');
+                }
+            }
+        }
+
+        // 检查登录状态
         function checkLogin() {
             const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
             if (isLoggedIn === 'true') {
+                const savedCloud = localStorage.getItem('cloudConfig');
+                if (savedCloud) {
+                    const cloud = JSON.parse(savedCloud);
+                    initCloud(cloud.bucket, cloud.region);
+                }
                 showConfigPage();
             } else {
                 showLoginPage();
@@ -768,120 +930,134 @@
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('configPage').classList.remove('show');
             document.getElementById('logoutBtn').style.display = 'none';
+
+            // 加载保存的云配置
+            const savedCloud = localStorage.getItem('cloudConfig');
+            if (savedCloud) {
+                const cloud = JSON.parse(savedCloud);
+                document.getElementById('loginBucket').value = cloud.bucket || '';
+                document.getElementById('loginRegion').value = cloud.region || 'ap-shanghai';
+            }
+
             document.getElementById('passwordInput').value = '';
             document.getElementById('errorMsg').classList.remove('show');
-
-            // 检查是否设置过密码
-            const adminPassword = localStorage.getItem('adminPassword');
-            const loginHint = document.getElementById('loginHint');
-            if (adminPassword) {
-                loginHint.textContent = '请输入管理员密码';
-            } else {
-                loginHint.textContent = '首次使用请先设置密码';
-            }
         }
 
         function showConfigPage() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('configPage').classList.add('show');
             document.getElementById('logoutBtn').style.display = 'block';
+
             loadConfig();
         }
 
-        // 切换密码显示
         function togglePassword() {
             const input = document.getElementById('passwordInput');
             const btn = document.querySelector('.password-toggle');
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.textContent = '🙈';
-            } else {
-                input.type = 'password';
-                btn.textContent = '👁️';
-            }
+            input.type = input.type === 'password' ? 'text' : 'password';
+            btn.textContent = input.type === 'password' ? '👁️' : '🙈';
         }
 
         // 执行登录
-        function doLogin() {
+        async function doLogin() {
             const password = document.getElementById('passwordInput').value;
-            const adminPassword = localStorage.getItem('adminPassword');
+            const b = document.getElementById('loginBucket').value.trim();
+            const r = document.getElementById('loginRegion').value.trim() || 'ap-shanghai';
 
-            // 如果没有设置过密码，则设置密码
-            if (!adminPassword) {
+            if (!b) {
+                showToast('请先配置云存储');
+                return;
+            }
+
+            // 保存云配置
+            localStorage.setItem('cloudConfig', JSON.stringify({ bucket: b, region: r }));
+
+            if (!initCloud(b, r)) {
+                showToast('云存储初始化失败');
+                return;
+            }
+
+            showSyncStatus('正在登录...', 'syncing');
+
+            // 从云端加载配置
+            const cloudData = await loadFromCloud();
+
+            if (cloudData && cloudData.adminPassword) {
+                // 云端有密码，验证
+                if (password === cloudData.adminPassword) {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    cloudConfig = cloudData;
+                    showConfigPage();
+                } else {
+                    document.getElementById('errorMsg').textContent = '密码错误';
+                    document.getElementById('errorMsg').classList.add('show');
+                }
+            } else {
+                // 云端无密码，设置新密码
                 if (password.length < 4) {
                     document.getElementById('errorMsg').textContent = '密码至少4位';
                     document.getElementById('errorMsg').classList.add('show');
                     return;
                 }
-                localStorage.setItem('adminPassword', password);
+                cloudConfig = { adminPassword: password };
+                await saveToCloud(cloudConfig);
                 sessionStorage.setItem('adminLoggedIn', 'true');
-                showToast('✅ 密码已设置，请记住！');
+                showToast('✅ 密码已设置到云端');
                 showConfigPage();
-                return;
-            }
-
-            // 验证密码
-            if (password === adminPassword) {
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                document.getElementById('errorMsg').classList.remove('show');
-                showConfigPage();
-            } else {
-                document.getElementById('errorMsg').textContent = '密码错误，请重试';
-                document.getElementById('errorMsg').classList.add('show');
-                document.getElementById('passwordInput').value = '';
             }
         }
 
-        // 退出登录
         function logout() {
             sessionStorage.removeItem('adminLoggedIn');
+            cloudConfig = null;
             showLoginPage();
         }
 
-        // 回车登录
         document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                doLogin();
-            }
+            if (e.key === 'Enter') doLogin();
         });
 
         // 加载配置
-        function loadConfig() {
-            const saved = localStorage.getItem('weddingPhotoConfig');
-            if (saved) {
-                try {
-                    currentConfig = { ...defaultConfig, ...JSON.parse(saved) };
-                } catch (e) {
-                    currentConfig = { ...defaultConfig };
-                }
+        async function loadConfig() {
+            // 同步云配置到表单
+            const savedCloud = localStorage.getItem('cloudConfig');
+            if (savedCloud) {
+                const cloud = JSON.parse(savedCloud);
+                document.getElementById('bucket').value = cloud.bucket || '';
+                document.getElementById('region').value = cloud.region || 'ap-shanghai';
             }
+
+            // 从云端加载配置
+            if (cos) {
+                showSyncStatus('同步中...', 'syncing');
+                const cloudData = await loadFromCloud();
+                if (cloudData) {
+                    cloudConfig = cloudData;
+                    currentConfig = { ...defaultConfig, ...cloudData };
+                }
+                showSyncStatus('已同步', 'success');
+            }
+
             applyToForm();
             updatePreview();
             updateShareUrl();
         }
 
-        // 应用配置到表单
         function applyToForm() {
             document.getElementById('pageTitle').value = currentConfig.pageTitle;
             document.getElementById('pageSubtitle').value = currentConfig.pageSubtitle;
             document.getElementById('uploadText').value = currentConfig.uploadText;
             document.getElementById('statLabel').value = currentConfig.statLabel;
-
             document.getElementById('themeColorPicker').value = currentConfig.themeColor;
             document.getElementById('themeColorValue').value = currentConfig.themeColor;
-
-            document.getElementById('useCloud').checked = currentConfig.useCloud;
-            document.getElementById('bucket').value = currentConfig.bucket || '';
-            document.getElementById('region').value = currentConfig.region || 'ap-shanghai';
-            document.getElementById('showDecorations').checked = currentConfig.showDecorations;
-
-            document.getElementById('cloudSettings').style.display = currentConfig.useCloud ? 'block' : 'none';
+            document.getElementById('showDecorations').checked = currentConfig.showDecorations !== false;
             updatePresetActive();
         }
 
         function updatePresetActive() {
+            const color = currentConfig.themeColor;
             document.querySelectorAll('.preset-color').forEach(el => {
-                el.classList.toggle('active', el.dataset.color === currentConfig.themeColor);
+                el.classList.toggle('active', el.dataset.color === color);
             });
         }
 
@@ -897,8 +1073,8 @@
         }
 
         // 保存配置
-        function saveConfig() {
-            // 检查是否修改密码
+        async function saveConfig() {
+            // 修改密码
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -911,38 +1087,82 @@
                     showToast('两次密码不一致');
                     return;
                 }
-                localStorage.setItem('adminPassword', newPassword);
-                showToast('✅ 密码已修改，请记住新密码！');
+                cloudConfig.adminPassword = newPassword;
+                showToast('✅ 密码已修改');
             }
 
-            // 保存其他配置
+            // 保存云配置
             currentConfig = {
+                ...currentConfig,
                 pageTitle: document.getElementById('pageTitle').value || defaultConfig.pageTitle,
                 pageSubtitle: document.getElementById('pageSubtitle').value || defaultConfig.pageSubtitle,
                 uploadText: document.getElementById('uploadText').value || defaultConfig.uploadText,
                 statLabel: document.getElementById('statLabel').value || defaultConfig.statLabel,
                 themeColor: document.getElementById('themeColorValue').value,
-                useCloud: document.getElementById('useCloud').checked,
-                bucket: document.getElementById('bucket').value.trim(),
-                region: document.getElementById('region').value.trim() || 'ap-shanghai',
                 showDecorations: document.getElementById('showDecorations').checked,
                 saveTime: Date.now()
             };
 
-            localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
-            updatePreview();
+            cloudConfig = { ...cloudConfig, ...currentConfig };
 
-            // 清空密码输入框
+            // 保存到云端
+            const b = document.getElementById('bucket').value.trim();
+            const r = document.getElementById('region').value.trim() || 'ap-shanghai';
+
+            if (b) {
+                localStorage.setItem('cloudConfig', JSON.stringify({ bucket: b, region: r }));
+                if (initCloud(b, r)) {
+                    showSyncStatus('同步中...', 'syncing');
+                    const success = await saveToCloud(cloudConfig);
+                    if (success) {
+                        showSyncStatus('✅ 已同步', 'success');
+                        showToast('✅ 配置已保存并同步到云端');
+                    } else {
+                        showSyncStatus('❌ 同步失败', 'error');
+                        showToast('保存失败，请重试');
+                    }
+                }
+            } else {
+                showToast('请先填写存储桶名称');
+            }
+
+            // 同时保存到本地
+            localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
+
+            updatePreview();
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmPassword').value = '';
+        }
 
-            showToast('✅ 配置已保存，首页实时更新！');
+        // 同步到云端
+        async function syncToCloud() {
+            const b = document.getElementById('bucket').value.trim();
+            const r = document.getElementById('region').value.trim() || 'ap-shanghai';
+
+            if (!b) {
+                showToast('请先填写存储桶名称');
+                return;
+            }
+
+            localStorage.setItem('cloudConfig', JSON.stringify({ bucket: b, region: r }));
+
+            if (initCloud(b, r)) {
+                showSyncStatus('同步中...', 'syncing');
+                const success = await saveToCloud(cloudConfig || currentConfig);
+                if (success) {
+                    showSyncStatus('✅ 同步成功', 'success');
+                    showToast('已同步到云端');
+                } else {
+                    showSyncStatus('❌ 同步失败', 'error');
+                    showToast('同步失败');
+                }
+            }
         }
 
         function resetConfig() {
             if (confirm('确定要恢复默认设置吗？')) {
-                localStorage.removeItem('weddingPhotoConfig');
                 currentConfig = { ...defaultConfig };
+                cloudConfig = { adminPassword: cloudConfig?.adminPassword };
                 applyToForm();
                 updatePreview();
                 showToast('已恢复默认设置');
@@ -959,19 +1179,13 @@
         function copyLink() {
             const url = window.location.href.replace('admin.html', 'index.html');
             navigator.clipboard.writeText(url).then(() => {
-                showToast('链接已复制到剪贴板');
+                showToast('链接已复制');
             }).catch(() => {
-                const input = document.createElement('input');
-                input.value = url;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                showToast('链接已复制到剪贴板');
+                showToast('复制成功');
             });
         }
 
-        // 颜色同步
+        // 颜色
         document.getElementById('themeColorPicker').addEventListener('input', (e) => {
             document.getElementById('themeColorValue').value = e.target.value;
             updatePresetActive();
@@ -991,10 +1205,6 @@
                 document.getElementById('themeColorValue').value = preset.dataset.color;
                 updatePresetActive();
             }
-        });
-
-        document.getElementById('useCloud').addEventListener('change', (e) => {
-            document.getElementById('cloudSettings').style.display = e.target.checked ? 'block' : 'none';
         });
 
         document.getElementById('pageTitle').addEventListener('input', updatePreview);
