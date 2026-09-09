@@ -5,661 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>婚礼照片收集 - 管理后台</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #fdf6f0 0%, #fff5f5 50%, #fdf2f8 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .login-container {
-            max-width: 400px;
-            margin: 80px auto;
-            text-align: center;
-        }
-
-        .login-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-
-        .login-title {
-            color: #c48484;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .login-subtitle {
-            color: #b8a0a0;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .login-box {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .config-notice {
-            background: #fff3e0;
-            border: 1px solid #ffcc80;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .config-notice-title {
-            color: #e65100;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .config-notice-item {
-            color: #666;
-            font-size: 12px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .config-notice-item input {
-            flex: 1;
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-
-        .password-input-wrapper {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 15px 50px 15px 20px;
-            border: 2px solid #f0e8e8;
-            border-radius: 12px;
-            font-size: 16px;
-            text-align: center;
-            letter-spacing: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .password-input:focus {
-            outline: none;
-            border-color: #e8a4a4;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #c8b0b0;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #e8a4a4, #d49191);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(232, 164, 164, 0.4);
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .login-btn:disabled {
-            background: #d0c0c0;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .error-msg {
-            color: #e57373;
-            font-size: 13px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .error-msg.show {
-            display: block;
-        }
-
-        .login-hint {
-            color: #c8b0b0;
-            font-size: 12px;
-            margin-top: 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            display: none;
-        }
-
-        .container.show {
-            display: block;
-        }
-
-        .header {
-            text-align: center;
-            padding: 30px 20px;
-            position: relative;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #e8a4a4, #f5c6c6);
-            border-radius: 2px;
-        }
-
-        .header h1 {
-            color: #c48484;
-            font-size: 26px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            letter-spacing: 3px;
-        }
-
-        .header p {
-            color: #b8a0a0;
-            font-size: 13px;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            color: #c48484;
-            border: 1px solid #f0d4d4;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            background: #fff5f5;
-        }
-
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            color: #c48484;
-            border: 1px solid #f0d4d4;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-
-        .logout-btn:hover {
-            background: #fff5f5;
-        }
-
-        .sync-status {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #666;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .sync-status.show {
-            display: block;
-        }
-
-        .sync-status.syncing {
-            color: #ff9800;
-        }
-
-        .sync-status.success {
-            color: #4caf50;
-        }
-
-        .sync-status.error {
-            color: #f44336;
-        }
-
-        .config-section {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .section-title {
-            color: #c48484;
-            font-size: 16px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0e8e8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .form-label {
-            display: block;
-            color: #8a7a7a;
-            font-size: 13px;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #f0e8e8;
-            border-radius: 10px;
-            font-size: 15px;
-            color: #5a4a4a;
-            transition: all 0.3s ease;
-            background: #fdfbfb;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #e8a4a4;
-        }
-
-        .color-picker-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .color-picker {
-            width: 44px;
-            height: 44px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .color-picker::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-
-        .color-picker::-webkit-color-swatch {
-            border: 2px solid #f0e8e8;
-            border-radius: 8px;
-        }
-
-        .color-value {
-            flex: 1;
-            padding: 10px 14px;
-            border: 2px solid #f0e8e8;
-            border-radius: 10px;
-            font-size: 13px;
-            color: #5a4a4a;
-            background: #fdfbfb;
-            font-family: monospace;
-        }
-
-        .preset-colors {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        .preset-color {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .preset-color:hover {
-            transform: scale(1.1);
-            border-color: #5a4a4a;
-        }
-
-        .preset-color.active {
-            border-color: #5a4a4a;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .toggle-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .toggle {
-            position: relative;
-            width: 50px;
-            height: 28px;
-        }
-
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #e0d0d0;
-            transition: 0.3s;
-            border-radius: 28px;
-        }
-
-        .toggle-slider::before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .toggle input:checked + .toggle-slider {
-            background: linear-gradient(135deg, #e8a4a4, #d49191);
-        }
-
-        .toggle input:checked + .toggle-slider::before {
-            transform: translateX(22px);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 25px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #e8a4a4, #d49191);
-            color: white;
-            box-shadow: 0 4px 15px rgba(232, 164, 164, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #c48484;
-            border: 2px solid #f0d4d4;
-        }
-
-        .btn-secondary:hover {
-            background: #fff5f5;
-        }
-
-        .preview-box {
-            background: #fdfbfb;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            border: 2px dashed #f0d4d4;
-        }
-
-        .preview-title {
-            font-size: 22px;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .preview-subtitle {
-            font-size: 13px;
-            color: #888;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .status-bar {
-            background: #e8f5e9;
-            border: 1px solid #a5d6a7;
-            border-radius: 10px;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: #2e7d32;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4caf50;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .link-box {
-            background: #f5f5f5;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 15px;
-        }
-
-        .link-box-label {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-
-        .link-box-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .link-box-url {
-            flex: 1;
-            font-size: 14px;
-            color: #c48484;
-            word-break: break-all;
-        }
-
-        .copy-btn {
-            padding: 6px 12px;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .link-box-hint {
-            font-size: 11px;
-            color: #999;
-            margin-top: 6px;
-        }
-
-        @media (max-width: 480px) {
-            .login-container {
-                margin: 40px 15px;
-            }
-
-            .login-box {
-                padding: 30px 20px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            .config-section {
-                padding: 15px;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-
-            .logout-btn {
-                top: 15px;
-                right: 15px;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#fdf6f0 0%,#fff5f5 50%,#fdf2f8 100%);min-height:100vh;padding:20px}
+        .container{max-width:600px;margin:0 auto}
+        .header{text-align:center;padding:30px 20px;position:relative}
+        .header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:3px;background:linear-gradient(90deg,#e8a4a4,#f5c6c6);border-radius:2px}
+        .header h1{color:#c48484;font-size:26px;font-weight:500;margin-bottom:8px;letter-spacing:3px}
+        .header p{color:#b8a0a0;font-size:13px}
+        .back-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#c48484;border:1px solid #f0d4d4;padding:10px 20px;border-radius:25px;font-size:14px;text-decoration:none;margin-bottom:20px;transition:all .3s}
+        .back-btn:hover{background:#fff5f5}
+        .config-section{background:#fff;border-radius:20px;padding:20px;margin-bottom:15px;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+        .section-title{color:#c48484;font-size:16px;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #f0e8e8;display:flex;align-items:center;gap:8px}
+        .form-group{margin-bottom:15px}
+        .form-group:last-child{margin-bottom:0}
+        .form-label{display:block;color:#8a7a7a;font-size:13px;margin-bottom:6px;font-weight:500}
+        .form-input{width:100%;padding:10px 14px;border:2px solid #f0e8e8;border-radius:10px;font-size:15px;color:#5a4a4a;transition:all .3s;background:#fdfbfb}
+        .form-input:focus{outline:none;border-color:#e8a4a4}
+        .color-picker-wrapper{display:flex;align-items:center;gap:12px}
+        .color-picker{width:44px;height:44px;border:none;border-radius:10px;cursor:pointer;padding:0;overflow:hidden}
+        .color-picker::-webkit-color-swatch-wrapper{padding:0}
+        .color-picker::-webkit-color-swatch{border:2px solid #f0e8e8;border-radius:8px}
+        .color-value{flex:1;padding:10px 14px;border:2px solid #f0e8e8;border-radius:10px;font-size:13px;color:#5a4a4a;background:#fdfbfb;font-family:monospace}
+        .preset-colors{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+        .preset-color{width:32px;height:32px;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:all .3s}
+        .preset-color:hover{transform:scale(1.1);border-color:#5a4a4a}
+        .preset-color.active{border-color:#5a4a4a;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+        .toggle-group{display:flex;align-items:center;justify-content:space-between}
+        .toggle{position:relative;width:50px;height:28px}
+        .toggle input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#e0d0d0;transition:.3s;border-radius:28px}
+        .toggle-slider::before{position:absolute;content:"";height:22px;width:22px;left:3px;bottom:3px;background:#fff;transition:.3s;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+        .toggle input:checked+.toggle-slider{background:linear-gradient(135deg,#e8a4a4,#d49191)}
+        .toggle input:checked+.toggle-slider::before{transform:translateX(22px)}
+        .btn-group{display:flex;gap:12px;margin-top:20px}
+        .btn{flex:1;padding:14px 20px;border:none;border-radius:25px;font-size:15px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-primary{background:linear-gradient(135deg,#e8a4a4,#d49191);color:#fff;box-shadow:0 4px 15px rgba(232,164,164,.4)}
+        .btn-primary:hover{transform:translateY(-2px)}
+        .btn-secondary{background:#fff;color:#c48484;border:2px solid #f0d4d4}
+        .btn-secondary:hover{background:#fff5f5}
+        .preview-box{background:#fdfbfb;border-radius:15px;padding:25px;text-align:center;border:2px dashed #f0d4d4}
+        .preview-title{font-size:22px;margin-bottom:8px;color:#333}
+        .preview-subtitle{font-size:13px;color:#888}
+        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,.8);color:#fff;padding:12px 24px;border-radius:25px;font-size:14px;opacity:0;transition:all .3s;z-index:1000}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+        .status-bar{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:12px 15px;margin-bottom:15px;font-size:13px;color:#2e7d32;display:flex;align-items:center;gap:10px}
+        .link-box{background:#f5f5f5;border-radius:10px;padding:12px;margin-bottom:15px}
+        .link-box-label{font-size:12px;color:#888;margin-bottom:6px}
+        .link-box-content{display:flex;align-items:center;gap:10px}
+        .link-box-url{flex:1;font-size:14px;color:#c48484;word-break:break-all}
+        .copy-btn{padding:6px 12px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;font-size:12px;cursor:pointer;color:#666}
+        .copy-btn:hover{background:#f0f0f0}
+        .link-box-hint{font-size:11px;color:#999;margin-top:6px}
+        .cloud-guide{background:#fff8e6;border:1px solid #ffe4a0;border-radius:12px;padding:15px;margin-bottom:15px}
+        .cloud-guide-title{color:#996600;font-size:14px;font-weight:500;margin-bottom:10px}
+        .cloud-guide-step{color:#666;font-size:12px;margin-bottom:8px;display:flex;gap:8px}
+        .cloud-guide-step span:first-child{color:#ff9800;font-weight:bold}
+        @media(max-width:480px){.header h1{font-size:22px}.btn-group{flex-direction:column}}
     </style>
 </head>
 <body>
-    <button class="logout-btn" id="logoutBtn" onclick="logout()" style="display:none;">退出登录</button>
-    <div class="sync-status" id="syncStatus">同步中...</div>
-
-    <!-- 登录页面 -->
-    <div class="login-container" id="loginPage">
-        <div class="login-icon">💒</div>
-        <h1 class="login-title">管理后台</h1>
-        <p class="login-subtitle">请输入管理员密码</p>
-
-        <div class="login-box">
-            <!-- 云存储配置 -->
-            <div class="config-notice" id="cloudConfigSection">
-                <div class="config-notice-title">☁️ 云存储配置（首次必填）</div>
-                <div class="config-notice-item">
-                    <input type="text" id="loginBucket" placeholder="存储桶名称">
-                </div>
-                <div class="config-notice-item">
-                    <input type="text" id="loginRegion" placeholder="地域（如 ap-shanghai）" value="ap-shanghai">
-                </div>
-                <div class="config-notice-item" style="margin-top:8px;">
-                    <button class="login-btn" style="padding:10px; font-size:14px;" onclick="testCloudLogin()">验证并连接</button>
-                </div>
-            </div>
-
-            <div class="password-input-wrapper">
-                <input type="password" class="password-input" id="passwordInput" placeholder="请输入密码" maxlength="20">
-                <button class="password-toggle" onclick="togglePassword()">👁️</button>
-            </div>
-            <button class="login-btn" id="loginBtn" onclick="doLogin()" disabled>请先配置云存储</button>
-            <p class="error-msg" id="errorMsg">密码错误，请重试</p>
-        </div>
-
-        <p class="login-hint" id="loginHint">配置云存储后可多设备同步</p>
-    </div>
-
-    <!-- 设置页面 -->
-    <div class="container" id="configPage">
+    <div class="container">
         <div class="header">
             <h1>管理后台</h1>
-            <p>个性化设置 · 云端实时同步</p>
+            <p>个性化设置 · 一键同步</p>
         </div>
 
         <a href="index.html" class="back-btn">← 返回首页</a>
 
-        <!-- 状态栏 -->
-        <div class="status-bar">
-            <span class="status-dot"></span>
-            <span id="cloudStatus">已连接云端，配置自动同步</span>
+        <div class="status-bar" id="statusBar">
+            <span>✅ 配置文件就绪</span>
         </div>
 
-        <!-- 链接分享 -->
         <div class="link-box">
             <div class="link-box-label">📤 宾客访问链接</div>
             <div class="link-box-content">
@@ -669,70 +85,36 @@
             <div class="link-box-hint">将此链接做成二维码，放在婚礼现场让宾客扫码上传照片</div>
         </div>
 
-        <!-- 云存储设置 -->
-        <div class="config-section">
-            <div class="section-title">☁️ 云存储设置</div>
-
-            <div class="form-group">
-                <label class="form-label">存储桶名称 (Bucket)</label>
-                <input type="text" class="form-input" id="bucket" placeholder="例如：wedding-photos-123456">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">地域 (Region)</label>
-                <input type="text" class="form-input" id="region" placeholder="例如：ap-shanghai" value="ap-shanghai">
-            </div>
-
-            <div class="btn-group" style="margin-top:15px;">
-                <button class="btn btn-secondary" onclick="testCloud()">🔍 测试连接</button>
-                <button class="btn btn-primary" onclick="syncToCloud()">☁️ 同步到云端</button>
-            </div>
-
-            <a href="setup-guide.html" class="back-btn" style="margin-top:10px; margin-bottom:0;">
-                📖 查看配置教程
-            </a>
+        <div class="cloud-guide">
+            <div class="cloud-guide-title">☁️ 同步到云端（可选）</div>
+            <div class="cloud-guide-step"><span>1.</span> 点击「下载配置文件」</div>
+            <div class="cloud-guide-step"><span>2.</span> 登录腾讯云COS控制台</div>
+            <div class="cloud-guide-step"><span>3.</span> 上传这个配置文件到存储桶根目录</div>
+            <div class="cloud-guide-step"><span>4.</span> 文件名改为：wedding-config.json</div>
         </div>
 
-        <!-- 修改密码 -->
-        <div class="config-section">
-            <div class="section-title">🔐 修改管理密码</div>
-            <div class="form-group">
-                <input type="password" class="form-input" id="newPassword" placeholder="输入新密码（不修改请留空）" maxlength="20">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-input" id="confirmPassword" placeholder="确认新密码" maxlength="20">
-            </div>
-        </div>
-
-        <!-- 文字设置 -->
         <div class="config-section">
             <div class="section-title">📝 文字设置</div>
-
             <div class="form-group">
                 <label class="form-label">页面标题</label>
                 <input type="text" class="form-input" id="pageTitle" placeholder="输入页面标题" maxlength="30">
             </div>
-
             <div class="form-group">
                 <label class="form-label">副标题描述</label>
                 <input type="text" class="form-input" id="pageSubtitle" placeholder="输入副标题" maxlength="50">
             </div>
-
             <div class="form-group">
                 <label class="form-label">上传提示文字</label>
                 <input type="text" class="form-input" id="uploadText" placeholder="点击或拖拽上传照片" maxlength="20">
             </div>
-
             <div class="form-group">
                 <label class="form-label">照片统计标签</label>
                 <input type="text" class="form-input" id="statLabel" placeholder="已收集照片" maxlength="10">
             </div>
         </div>
 
-        <!-- 颜色设置 -->
         <div class="config-section">
             <div class="section-title">🎨 颜色设置</div>
-
             <div class="form-group">
                 <label class="form-label">主题色</label>
                 <div class="color-picker-wrapper">
@@ -740,22 +122,20 @@
                     <input type="text" class="color-value" id="themeColorValue" value="#c48484" maxlength="7">
                 </div>
                 <div class="preset-colors" id="presetColors">
-                    <div class="preset-color active" style="background: #c48484" data-color="#c48484" title="玫瑰粉"></div>
-                    <div class="preset-color" style="background: #8b7355" data-color="#8b7355" title="焦糖棕"></div>
-                    <div class="preset-color" style="background: #7a9e7e" data-color="#7a9e7e" title="薄荷绿"></div>
-                    <div class="preset-color" style="background: #6b8cae" data-color="#6b8cae" title="雾霾蓝"></div>
-                    <div class="preset-color" style="background: #9b7bb8" data-color="#9b7bb8" title="薰衣草"></div>
-                    <div class="preset-color" style="background: #c9a86c" data-color="#c9a86c" title="香槟金"></div>
-                    <div class="preset-color" style="background: #d4726a" data-color="#d4726a" title="珊瑚红"></div>
-                    <div class="preset-color" style="background: #4a4a4a" data-color="#4a4a4a" title="石墨灰"></div>
+                    <div class="preset-color active" style="background:#c48484" data-color="#c48484" title="玫瑰粉"></div>
+                    <div class="preset-color" style="background:#8b7355" data-color="#8b7355" title="焦糖棕"></div>
+                    <div class="preset-color" style="background:#7a9e7e" data-color="#7a9e7e" title="薄荷绿"></div>
+                    <div class="preset-color" style="background:#6b8cae" data-color="#6b8cae" title="雾霾蓝"></div>
+                    <div class="preset-color" style="background:#9b7bb8" data-color="#9b7bb8" title="薰衣草"></div>
+                    <div class="preset-color" style="background:#c9a86c" data-color="#c9a86c" title="香槟金"></div>
+                    <div class="preset-color" style="background:#d4726a" data-color="#d4726a" title="珊瑚红"></div>
+                    <div class="preset-color" style="background:#4a4a4a" data-color="#4a4a4a" title="石墨灰"></div>
                 </div>
             </div>
         </div>
 
-        <!-- 其他设置 -->
         <div class="config-section">
             <div class="section-title">✨ 其他设置</div>
-
             <div class="form-group toggle-group">
                 <label class="form-label">显示浮动装饰</label>
                 <label class="toggle">
@@ -765,25 +145,23 @@
             </div>
         </div>
 
-        <!-- 预览 -->
         <div class="config-section">
             <div class="section-title">👁️ 效果预览</div>
-            <div class="preview-box" id="previewBox">
+            <div class="preview-box">
                 <div class="preview-title" id="previewTitle">婚礼照片收集</div>
                 <div class="preview-subtitle" id="previewSubtitle">记录美好瞬间 · 分享幸福时刻</div>
             </div>
         </div>
 
-        <!-- 保存按钮 -->
         <div class="btn-group">
+            <button class="btn btn-secondary" onclick="downloadConfig()">📥 下载配置</button>
             <button class="btn btn-secondary" onclick="resetConfig()">恢复默认</button>
-            <button class="btn btn-primary" onclick="saveConfig()">💾 保存并同步</button>
+            <button class="btn btn-primary" onclick="saveConfig()">💾 保存</button>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
-    <script src="https://cos.cloud.tencent.com/cos.js"></script>
     <script>
         const defaultConfig = {
             pageTitle: '婚礼照片收集',
@@ -791,253 +169,19 @@
             uploadText: '点击或拖拽上传照片',
             statLabel: '已收集照片',
             themeColor: '#c48484',
-            showDecorations: true
+            showDecorations: true,
+            saveTime: Date.now()
         };
 
-        const CONFIG_KEY = 'wedding-config.json';
         let currentConfig = { ...defaultConfig };
-        let cloudConfig = null;
-        let cos = null;
-        let bucket = '';
-        let region = 'ap-shanghai';
 
-        // 显示同步状态
-        function showSyncStatus(text, type = 'normal') {
-            const el = document.getElementById('syncStatus');
-            el.textContent = text;
-            el.className = 'sync-status show ' + type;
-            setTimeout(() => el.classList.remove('show'), 3000);
-        }
-
-        // 初始化云存储
-        function initCloud(bucketName, regionName) {
-            if (typeof COS === 'undefined') {
-                showToast('云存储SDK未加载');
-                return false;
-            }
-            bucket = bucketName;
-            region = regionName || 'ap-shanghai';
-            cos = new COS({
-                Bucket: bucket,
-                Region: region
-            });
-            return true;
-        }
-
-        // 从云端加载配置
-        async function loadFromCloud() {
-            if (!cos) return null;
-            try {
-                const result = await cos.getObject({
-                    Bucket: bucket,
-                    Region: region,
-                    Key: CONFIG_KEY
-                });
-                return JSON.parse(result.Body);
-            } catch (e) {
-                console.log('云端无配置');
-                return null;
-            }
-        }
-
-        // 保存配置到云端
-        async function saveToCloud(config) {
-            if (!cos) return false;
-            try {
-                await cos.putObject({
-                    Bucket: bucket,
-                    Region: region,
-                    Key: CONFIG_KEY,
-                    Body: JSON.stringify(config),
-                    ContentType: 'application/json'
-                });
-                return true;
-            } catch (e) {
-                console.error('保存到云端失败', e);
-                return false;
-            }
-        }
-
-        // 测试云连接
-        async function testCloud() {
-            const b = document.getElementById('bucket').value.trim();
-            const r = document.getElementById('region').value.trim() || 'ap-shanghai';
-
-            if (!b) {
-                showToast('请输入存储桶名称');
-                return;
-            }
-
-            if (initCloud(b, r)) {
-                showSyncStatus('正在测试连接...', 'syncing');
+        function loadConfig() {
+            const saved = localStorage.getItem('weddingPhotoConfig');
+            if (saved) {
                 try {
-                    await cos.headBucket({ Bucket: b, Region: r });
-                    showSyncStatus('✅ 连接成功', 'success');
-                    showToast('云端连接成功');
-                } catch (e) {
-                    showSyncStatus('❌ 连接失败', 'error');
-                    showToast('连接失败，请检查配置');
-                }
+                    currentConfig = { ...defaultConfig, ...JSON.parse(saved) };
+                } catch (e) {}
             }
-        }
-
-        // 登录页测试云连接
-        async function testCloudLogin() {
-            const b = document.getElementById('loginBucket').value.trim();
-            const r = document.getElementById('loginRegion').value.trim() || 'ap-shanghai';
-
-            if (!b) {
-                showToast('请输入存储桶名称');
-                return;
-            }
-
-            showSyncStatus('正在验证...', 'syncing');
-            document.getElementById('loginBtn').disabled = true;
-            document.getElementById('loginBtn').textContent = '验证中...';
-
-            if (initCloud(b, r)) {
-                try {
-                    await cos.headBucket({ Bucket: b, Region: r });
-                    showSyncStatus('✅ 验证成功', 'success');
-                    document.getElementById('loginBtn').disabled = false;
-                    document.getElementById('loginBtn').textContent = '验证成功，点击登录';
-                    showToast('云存储验证成功');
-                } catch (e) {
-                    showSyncStatus('❌ 验证失败', 'error');
-                    document.getElementById('loginBtn').disabled = true;
-                    document.getElementById('loginBtn').textContent = '验证失败，请检查配置';
-                    showToast('云存储配置错误');
-                }
-            }
-        }
-
-        // 检查登录状态
-        function checkLogin() {
-            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
-            if (isLoggedIn === 'true') {
-                const savedCloud = localStorage.getItem('cloudConfig');
-                if (savedCloud) {
-                    const cloud = JSON.parse(savedCloud);
-                    initCloud(cloud.bucket, cloud.region);
-                }
-                showConfigPage();
-            } else {
-                showLoginPage();
-            }
-        }
-
-        function showLoginPage() {
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('configPage').classList.remove('show');
-            document.getElementById('logoutBtn').style.display = 'none';
-
-            // 加载保存的云配置
-            const savedCloud = localStorage.getItem('cloudConfig');
-            if (savedCloud) {
-                const cloud = JSON.parse(savedCloud);
-                document.getElementById('loginBucket').value = cloud.bucket || '';
-                document.getElementById('loginRegion').value = cloud.region || 'ap-shanghai';
-            }
-
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('errorMsg').classList.remove('show');
-        }
-
-        function showConfigPage() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('configPage').classList.add('show');
-            document.getElementById('logoutBtn').style.display = 'block';
-
-            loadConfig();
-        }
-
-        function togglePassword() {
-            const input = document.getElementById('passwordInput');
-            const btn = document.querySelector('.password-toggle');
-            input.type = input.type === 'password' ? 'text' : 'password';
-            btn.textContent = input.type === 'password' ? '👁️' : '🙈';
-        }
-
-        // 执行登录
-        async function doLogin() {
-            const password = document.getElementById('passwordInput').value;
-            const b = document.getElementById('loginBucket').value.trim();
-            const r = document.getElementById('loginRegion').value.trim() || 'ap-shanghai';
-
-            if (!b) {
-                showToast('请先配置云存储');
-                return;
-            }
-
-            // 保存云配置
-            localStorage.setItem('cloudConfig', JSON.stringify({ bucket: b, region: r }));
-
-            if (!initCloud(b, r)) {
-                showToast('云存储初始化失败');
-                return;
-            }
-
-            showSyncStatus('正在登录...', 'syncing');
-
-            // 从云端加载配置
-            const cloudData = await loadFromCloud();
-
-            if (cloudData && cloudData.adminPassword) {
-                // 云端有密码，验证
-                if (password === cloudData.adminPassword) {
-                    sessionStorage.setItem('adminLoggedIn', 'true');
-                    cloudConfig = cloudData;
-                    showConfigPage();
-                } else {
-                    document.getElementById('errorMsg').textContent = '密码错误';
-                    document.getElementById('errorMsg').classList.add('show');
-                }
-            } else {
-                // 云端无密码，设置新密码
-                if (password.length < 4) {
-                    document.getElementById('errorMsg').textContent = '密码至少4位';
-                    document.getElementById('errorMsg').classList.add('show');
-                    return;
-                }
-                cloudConfig = { adminPassword: password };
-                await saveToCloud(cloudConfig);
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                showToast('✅ 密码已设置到云端');
-                showConfigPage();
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('adminLoggedIn');
-            cloudConfig = null;
-            showLoginPage();
-        }
-
-        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') doLogin();
-        });
-
-        // 加载配置
-        async function loadConfig() {
-            // 同步云配置到表单
-            const savedCloud = localStorage.getItem('cloudConfig');
-            if (savedCloud) {
-                const cloud = JSON.parse(savedCloud);
-                document.getElementById('bucket').value = cloud.bucket || '';
-                document.getElementById('region').value = cloud.region || 'ap-shanghai';
-            }
-
-            // 从云端加载配置
-            if (cos) {
-                showSyncStatus('同步中...', 'syncing');
-                const cloudData = await loadFromCloud();
-                if (cloudData) {
-                    cloudConfig = cloudData;
-                    currentConfig = { ...defaultConfig, ...cloudData };
-                }
-                showSyncStatus('已同步', 'success');
-            }
-
             applyToForm();
             updatePreview();
             updateShareUrl();
@@ -1055,45 +199,23 @@
         }
 
         function updatePresetActive() {
-            const color = currentConfig.themeColor;
             document.querySelectorAll('.preset-color').forEach(el => {
-                el.classList.toggle('active', el.dataset.color === color);
+                el.classList.toggle('active', el.dataset.color === currentConfig.themeColor);
             });
         }
 
         function updatePreview() {
-            document.getElementById('previewTitle').textContent = currentConfig.pageTitle || '婚礼照片收集';
+            document.getElementById('previewTitle').textContent = currentConfig.pageTitle;
             document.getElementById('previewTitle').style.color = currentConfig.themeColor;
-            document.getElementById('previewSubtitle').textContent = currentConfig.pageSubtitle || '记录美好瞬间 · 分享幸福时刻';
+            document.getElementById('previewSubtitle').textContent = currentConfig.pageSubtitle;
         }
 
         function updateShareUrl() {
-            const url = window.location.href.replace('admin.html', 'index.html');
-            document.getElementById('shareUrl').textContent = url;
+            document.getElementById('shareUrl').textContent = window.location.href.replace('admin.html', 'index.html');
         }
 
-        // 保存配置
-        async function saveConfig() {
-            // 修改密码
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (newPassword) {
-                if (newPassword.length < 4) {
-                    showToast('密码至少4位');
-                    return;
-                }
-                if (newPassword !== confirmPassword) {
-                    showToast('两次密码不一致');
-                    return;
-                }
-                cloudConfig.adminPassword = newPassword;
-                showToast('✅ 密码已修改');
-            }
-
-            // 保存云配置
+        function saveConfig() {
             currentConfig = {
-                ...currentConfig,
                 pageTitle: document.getElementById('pageTitle').value || defaultConfig.pageTitle,
                 pageSubtitle: document.getElementById('pageSubtitle').value || defaultConfig.pageSubtitle,
                 uploadText: document.getElementById('uploadText').value || defaultConfig.uploadText,
@@ -1103,66 +225,27 @@
                 saveTime: Date.now()
             };
 
-            cloudConfig = { ...cloudConfig, ...currentConfig };
-
-            // 保存到云端
-            const b = document.getElementById('bucket').value.trim();
-            const r = document.getElementById('region').value.trim() || 'ap-shanghai';
-
-            if (b) {
-                localStorage.setItem('cloudConfig', JSON.stringify({ bucket: b, region: r }));
-                if (initCloud(b, r)) {
-                    showSyncStatus('同步中...', 'syncing');
-                    const success = await saveToCloud(cloudConfig);
-                    if (success) {
-                        showSyncStatus('✅ 已同步', 'success');
-                        showToast('✅ 配置已保存并同步到云端');
-                    } else {
-                        showSyncStatus('❌ 同步失败', 'error');
-                        showToast('保存失败，请重试');
-                    }
-                }
-            } else {
-                showToast('请先填写存储桶名称');
-            }
-
-            // 同时保存到本地
             localStorage.setItem('weddingPhotoConfig', JSON.stringify(currentConfig));
-
             updatePreview();
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
+            showToast('✅ 配置已保存到本地');
         }
 
-        // 同步到云端
-        async function syncToCloud() {
-            const b = document.getElementById('bucket').value.trim();
-            const r = document.getElementById('region').value.trim() || 'ap-shanghai';
-
-            if (!b) {
-                showToast('请先填写存储桶名称');
-                return;
-            }
-
-            localStorage.setItem('cloudConfig', JSON.stringify({ bucket: b, region: r }));
-
-            if (initCloud(b, r)) {
-                showSyncStatus('同步中...', 'syncing');
-                const success = await saveToCloud(cloudConfig || currentConfig);
-                if (success) {
-                    showSyncStatus('✅ 同步成功', 'success');
-                    showToast('已同步到云端');
-                } else {
-                    showSyncStatus('❌ 同步失败', 'error');
-                    showToast('同步失败');
-                }
-            }
+        function downloadConfig() {
+            saveConfig();
+            const blob = new Blob([JSON.stringify(currentConfig, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wedding-config.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📥 配置文件已下载');
         }
 
         function resetConfig() {
             if (confirm('确定要恢复默认设置吗？')) {
+                localStorage.removeItem('weddingPhotoConfig');
                 currentConfig = { ...defaultConfig };
-                cloudConfig = { adminPassword: cloudConfig?.adminPassword };
                 applyToForm();
                 updatePreview();
                 showToast('已恢复默认设置');
@@ -1178,14 +261,10 @@
 
         function copyLink() {
             const url = window.location.href.replace('admin.html', 'index.html');
-            navigator.clipboard.writeText(url).then(() => {
-                showToast('链接已复制');
-            }).catch(() => {
-                showToast('复制成功');
-            });
+            navigator.clipboard.writeText(url);
+            showToast('链接已复制');
         }
 
-        // 颜色
         document.getElementById('themeColorPicker').addEventListener('input', (e) => {
             document.getElementById('themeColorValue').value = e.target.value;
             updatePresetActive();
@@ -1210,8 +289,7 @@
         document.getElementById('pageTitle').addEventListener('input', updatePreview);
         document.getElementById('pageSubtitle').addEventListener('input', updatePreview);
 
-        // 初始化
-        checkLogin();
+        loadConfig();
     </script>
 </body>
 </html>
